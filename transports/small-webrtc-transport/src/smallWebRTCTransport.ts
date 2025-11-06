@@ -461,7 +461,7 @@ export class SmallWebRTCTransport extends Transport {
         );
         // If ICE gathering has completed and the previous connection was still in the "checking" state,
         // we will reconnect to use all the new ICE candidates.
-        void this.attemptReconnection(false);
+        // void this.attemptReconnection(false);
       }
     });
 
