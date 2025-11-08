@@ -3129,7 +3129,7 @@ class $8381b73e1f76ead9$export$62043589d053a879 extends (0, $7ytRB$pipecataiclie
             } else (0, $7ytRB$pipecataiclientjs.logger).info("All ICE candidates have been sent.");
         };
         pc.addEventListener("icegatheringstatechange", ()=>{
-            if (pc.iceGatheringState === "complete" && pc.iceConnectionState === "checking" && this._waitForICEGathering) (0, $7ytRB$pipecataiclientjs.logger).info("Ice gathering completed and connection is still checking. Trying to reconnect.");
+            if (pc.iceGatheringState === "complete" && pc.iceConnectionState === "checking" && this._waitForICEGathering) (0, $7ytRB$pipecataiclientjs.logger).info("Ice gathering state changed:", pc.iceGatheringState);
         });
         pc.addEventListener("iceconnectionstatechange", ()=>this.handleICEConnectionStateChange());
         (0, $7ytRB$pipecataiclientjs.logger).debug(`iceConnectionState: ${pc.iceConnectionState}`);
@@ -3398,9 +3398,9 @@ class $8381b73e1f76ead9$export$62043589d053a879 extends (0, $7ytRB$pipecataiclie
         const signallingMessage = messageObj;
         // Handle different signalling message types
         switch(signallingMessage.message.type){
-            case $8381b73e1f76ead9$var$RENEGOTIATE_TYPE:
-                this.attemptReconnection(false);
-                break;
+            // case RENEGOTIATE_TYPE:
+            //   void this.attemptReconnection(false);
+            //   break;
             case $8381b73e1f76ead9$var$PEER_LEFT_TYPE:
                 this.disconnect();
                 break;

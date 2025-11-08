@@ -457,8 +457,11 @@ export class SmallWebRTCTransport extends Transport {
         this._waitForICEGathering
       ) {
         logger.info(
-          "Ice gathering completed and connection is still checking. Trying to reconnect.",
+          "Ice gathering state changed:", pc.iceGatheringState
         );
+        // logger.info(
+        //   "Ice gathering completed and connection is still checking. Trying to reconnect.",
+        // );
         // If ICE gathering has completed and the previous connection was still in the "checking" state,
         // we will reconnect to use all the new ICE candidates.
         // void this.attemptReconnection(false);
@@ -843,9 +846,9 @@ export class SmallWebRTCTransport extends Transport {
 
     // Handle different signalling message types
     switch (signallingMessage.message.type) {
-      case RENEGOTIATE_TYPE:
-        void this.attemptReconnection(false);
-        break;
+      // case RENEGOTIATE_TYPE:
+      //   void this.attemptReconnection(false);
+      //   break;
       case PEER_LEFT_TYPE:
         void this.disconnect();
         break;
