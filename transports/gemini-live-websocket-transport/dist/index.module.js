@@ -1,35 +1,14 @@
-var $7ytRB$pipecataiclientjs = require("@pipecat-ai/client-js");
-var $7ytRB$dailycodailyjs = require("@daily-co/daily-js");
-var $7ytRB$lodashcloneDeep = require("lodash/cloneDeep");
+import {RTVIError as $3GNns$RTVIError, TransportStartError as $3GNns$TransportStartError, RTVIMessageType as $3GNns$RTVIMessageType, UnsupportedFeatureError as $3GNns$UnsupportedFeatureError, logger as $3GNns$logger, DeviceError as $3GNns$DeviceError, Transport as $3GNns$Transport} from "@pipecat-ai/client-js";
+import $3GNns$dailycodailyjs from "@daily-co/daily-js";
+import {EventEmitter as $3GNns$EventEmitter} from "events";
 
-
-function $parcel$exportWildcard(dest, source) {
-  Object.keys(source).forEach(function(key) {
-    if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) {
-      return;
-    }
-
-    Object.defineProperty(dest, key, {
-      enumerable: true,
-      get: function get() {
-        return source[key];
-      }
-    });
-  });
-
-  return dest;
-}
 
 function $parcel$export(e, n, v, s) {
   Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
 }
+var $d4cf498bb51af8a5$exports = {};
 
-function $parcel$interopDefault(a) {
-  return a && a.__esModule ? a.default : a;
-}
-
-$parcel$export(module.exports, "WavMediaManager", () => $23859655abfc5f5c$export$45c5b9bfba2f6304);
-$parcel$export(module.exports, "DailyMediaManager", () => $1c088932741d88e6$export$c95c65abc5f47125);
+$parcel$export($d4cf498bb51af8a5$exports, "GeminiLiveWebsocketTransport", () => $d4cf498bb51af8a5$export$bef67da0c82ecefe);
 /**
  * Raw wav audio file contents
  * @typedef {Object} WavPackerAudioType
@@ -41,7 +20,7 @@ $parcel$export(module.exports, "DailyMediaManager", () => $1c088932741d88e6$expo
  */ /**
  * Utility class for assembling PCM16 "audio/wav" data
  * @class
- */ class $a61750b8fbee4dae$export$13afda237b1c9846 {
+ */ class $6d4b7449a1e1544a$export$13afda237b1c9846 {
     /**
    * Converts Float32Array of amplitude data to ArrayBuffer in Int16Array format
    * @param {Float32Array} float32Array
@@ -129,7 +108,7 @@ $parcel$export(module.exports, "DailyMediaManager", () => $1c088932741d88e6$expo
         };
     }
 }
-globalThis.WavPacker = $a61750b8fbee4dae$export$13afda237b1c9846;
+globalThis.WavPacker = $6d4b7449a1e1544a$export$13afda237b1c9846;
 
 
 /**
@@ -138,7 +117,7 @@ globalThis.WavPacker = $a61750b8fbee4dae$export$13afda237b1c9846;
  * to human-interpretable ranges, notably music ranges and
  * human vocal ranges.
  */ // Eighth octave frequencies
-const $e10a9de47f58e137$var$octave8Frequencies = [
+const $03f71ce85e00ada6$var$octave8Frequencies = [
     4186.01,
     4434.92,
     4698.63,
@@ -153,7 +132,7 @@ const $e10a9de47f58e137$var$octave8Frequencies = [
     7902.13
 ];
 // Labels for each of the above frequencies
-const $e10a9de47f58e137$var$octave8FrequencyLabels = [
+const $03f71ce85e00ada6$var$octave8FrequencyLabels = [
     'C',
     'C#',
     'D',
@@ -167,29 +146,29 @@ const $e10a9de47f58e137$var$octave8FrequencyLabels = [
     'A#',
     'B'
 ];
-const $e10a9de47f58e137$export$776c63898ae5b636 = [];
-const $e10a9de47f58e137$export$facd167cc27ea9b0 = [];
-for(let i = 1; i <= 8; i++)for(let f = 0; f < $e10a9de47f58e137$var$octave8Frequencies.length; f++){
-    const freq = $e10a9de47f58e137$var$octave8Frequencies[f];
-    $e10a9de47f58e137$export$776c63898ae5b636.push(freq / Math.pow(2, 8 - i));
-    $e10a9de47f58e137$export$facd167cc27ea9b0.push($e10a9de47f58e137$var$octave8FrequencyLabels[f] + i);
+const $03f71ce85e00ada6$export$776c63898ae5b636 = [];
+const $03f71ce85e00ada6$export$facd167cc27ea9b0 = [];
+for(let i = 1; i <= 8; i++)for(let f = 0; f < $03f71ce85e00ada6$var$octave8Frequencies.length; f++){
+    const freq = $03f71ce85e00ada6$var$octave8Frequencies[f];
+    $03f71ce85e00ada6$export$776c63898ae5b636.push(freq / Math.pow(2, 8 - i));
+    $03f71ce85e00ada6$export$facd167cc27ea9b0.push($03f71ce85e00ada6$var$octave8FrequencyLabels[f] + i);
 }
 /**
  * Subset of the note frequencies between 32 and 2000 Hz
  * 6 octave range: C1 to B6
- */ const $e10a9de47f58e137$var$voiceFrequencyRange = [
+ */ const $03f71ce85e00ada6$var$voiceFrequencyRange = [
     32.0,
     2000.0
 ];
-const $e10a9de47f58e137$export$dbc1581ed2cfa183 = $e10a9de47f58e137$export$776c63898ae5b636.filter((_, i)=>{
-    return $e10a9de47f58e137$export$776c63898ae5b636[i] > $e10a9de47f58e137$var$voiceFrequencyRange[0] && $e10a9de47f58e137$export$776c63898ae5b636[i] < $e10a9de47f58e137$var$voiceFrequencyRange[1];
+const $03f71ce85e00ada6$export$dbc1581ed2cfa183 = $03f71ce85e00ada6$export$776c63898ae5b636.filter((_, i)=>{
+    return $03f71ce85e00ada6$export$776c63898ae5b636[i] > $03f71ce85e00ada6$var$voiceFrequencyRange[0] && $03f71ce85e00ada6$export$776c63898ae5b636[i] < $03f71ce85e00ada6$var$voiceFrequencyRange[1];
 });
-const $e10a9de47f58e137$export$30a6f2881311088f = $e10a9de47f58e137$export$facd167cc27ea9b0.filter((_, i)=>{
-    return $e10a9de47f58e137$export$776c63898ae5b636[i] > $e10a9de47f58e137$var$voiceFrequencyRange[0] && $e10a9de47f58e137$export$776c63898ae5b636[i] < $e10a9de47f58e137$var$voiceFrequencyRange[1];
+const $03f71ce85e00ada6$export$30a6f2881311088f = $03f71ce85e00ada6$export$facd167cc27ea9b0.filter((_, i)=>{
+    return $03f71ce85e00ada6$export$776c63898ae5b636[i] > $03f71ce85e00ada6$var$voiceFrequencyRange[0] && $03f71ce85e00ada6$export$776c63898ae5b636[i] < $03f71ce85e00ada6$var$voiceFrequencyRange[1];
 });
 
 
-class $5853841ab58516d4$export$2c3136da0bf130f9 {
+class $f32f064564ee62f6$export$2c3136da0bf130f9 {
     /**
    * Retrieves frequency domain data from an AnalyserNode adjusted to a decibel range
    * returns human-readable formatting and labels
@@ -211,7 +190,7 @@ class $5853841ab58516d4$export$2c3136da0bf130f9 {
         let frequencies;
         let labels;
         if (analysisType === 'music' || analysisType === 'voice') {
-            const useFrequencies = analysisType === 'voice' ? (0, $e10a9de47f58e137$export$dbc1581ed2cfa183) : (0, $e10a9de47f58e137$export$776c63898ae5b636);
+            const useFrequencies = analysisType === 'voice' ? (0, $03f71ce85e00ada6$export$dbc1581ed2cfa183) : (0, $03f71ce85e00ada6$export$776c63898ae5b636);
             const aggregateOutput = Array(useFrequencies.length).fill(minDecibels);
             for(let i = 0; i < fftResult.length; i++){
                 const frequency = i * frequencyStep;
@@ -222,8 +201,8 @@ class $5853841ab58516d4$export$2c3136da0bf130f9 {
                 }
             }
             outputValues = aggregateOutput;
-            frequencies = analysisType === 'voice' ? (0, $e10a9de47f58e137$export$dbc1581ed2cfa183) : (0, $e10a9de47f58e137$export$776c63898ae5b636);
-            labels = analysisType === 'voice' ? (0, $e10a9de47f58e137$export$30a6f2881311088f) : (0, $e10a9de47f58e137$export$facd167cc27ea9b0);
+            frequencies = analysisType === 'voice' ? (0, $03f71ce85e00ada6$export$dbc1581ed2cfa183) : (0, $03f71ce85e00ada6$export$776c63898ae5b636);
+            labels = analysisType === 'voice' ? (0, $03f71ce85e00ada6$export$30a6f2881311088f) : (0, $03f71ce85e00ada6$export$facd167cc27ea9b0);
         } else {
             outputValues = Array.from(fftResult);
             frequencies = outputValues.map((_, i)=>frequencyStep * i);
@@ -316,7 +295,7 @@ class $5853841ab58516d4$export$2c3136da0bf130f9 {
             const index = Math.min(pct * this.fftResults.length | 0, this.fftResults.length - 1);
             fftResult = this.fftResults[index];
         }
-        return $5853841ab58516d4$export$2c3136da0bf130f9.getFrequencies(this.analyser, this.sampleRate, fftResult, analysisType, minDecibels, maxDecibels);
+        return $f32f064564ee62f6$export$2c3136da0bf130f9.getFrequencies(this.analyser, this.sampleRate, fftResult, analysisType, minDecibels, maxDecibels);
     }
     /**
    * Resume the internal AudioContext if it was suspended due to the lack of
@@ -327,10 +306,10 @@ class $5853841ab58516d4$export$2c3136da0bf130f9 {
         return true;
     }
 }
-globalThis.AudioAnalysis = $5853841ab58516d4$export$2c3136da0bf130f9;
+globalThis.AudioAnalysis = $f32f064564ee62f6$export$2c3136da0bf130f9;
 
 
-const $d6d3743ef65c7519$export$50b76700e2b15e9 = `
+const $29a8a70a9466b14f$export$50b76700e2b15e9 = `
 class StreamProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
@@ -420,23 +399,23 @@ class StreamProcessor extends AudioWorkletProcessor {
 
 registerProcessor('stream_processor', StreamProcessor);
 `;
-const $d6d3743ef65c7519$var$script = new Blob([
-    $d6d3743ef65c7519$export$50b76700e2b15e9
+const $29a8a70a9466b14f$var$script = new Blob([
+    $29a8a70a9466b14f$export$50b76700e2b15e9
 ], {
     type: 'application/javascript'
 });
-const $d6d3743ef65c7519$var$src = URL.createObjectURL($d6d3743ef65c7519$var$script);
-const $d6d3743ef65c7519$export$bfa8c596114d74df = $d6d3743ef65c7519$var$src;
+const $29a8a70a9466b14f$var$src = URL.createObjectURL($29a8a70a9466b14f$var$script);
+const $29a8a70a9466b14f$export$bfa8c596114d74df = $29a8a70a9466b14f$var$src;
 
 
 
-class $1e7ce9484a3c4077$export$9698d62c78b8f366 {
+class $d0a969833958d9e7$export$9698d62c78b8f366 {
     /**
    * Creates a new WavStreamPlayer instance
    * @param {{sampleRate?: number}} options
    * @returns {WavStreamPlayer}
    */ constructor({ sampleRate: sampleRate = 44100 } = {}){
-        this.scriptSrc = (0, $d6d3743ef65c7519$export$bfa8c596114d74df);
+        this.scriptSrc = (0, $29a8a70a9466b14f$export$bfa8c596114d74df);
         this.sampleRate = sampleRate;
         this.context = null;
         this.stream = null;
@@ -473,7 +452,7 @@ class $1e7ce9484a3c4077$export$9698d62c78b8f366 {
    * @returns {import('./analysis/audio_analysis.js').AudioAnalysisOutputType}
    */ getFrequencies(analysisType = "frequency", minDecibels = -100, maxDecibels = -30) {
         if (!this.analyser) throw new Error("Not connected, please call .connect() first");
-        return (0, $5853841ab58516d4$export$2c3136da0bf130f9).getFrequencies(this.analyser, this.sampleRate, null, analysisType, minDecibels, maxDecibels);
+        return (0, $f32f064564ee62f6$export$2c3136da0bf130f9).getFrequencies(this.analyser, this.sampleRate, null, analysisType, minDecibels, maxDecibels);
     }
     /**
    * @param {string} speaker deviceId
@@ -564,10 +543,10 @@ class $1e7ce9484a3c4077$export$9698d62c78b8f366 {
         return this.getTrackSampleOffset(true);
     }
 }
-globalThis.WavStreamPlayer = $1e7ce9484a3c4077$export$9698d62c78b8f366;
+globalThis.WavStreamPlayer = $d0a969833958d9e7$export$9698d62c78b8f366;
 
 
-const $2cf6a2d8a6d031bc$var$AudioProcessorWorklet = `
+const $8e1d1e6ff08f6fb5$var$AudioProcessorWorklet = `
 class AudioProcessor extends AudioWorkletProcessor {
 
   constructor() {
@@ -775,25 +754,25 @@ class AudioProcessor extends AudioWorkletProcessor {
 
 registerProcessor('audio_processor', AudioProcessor);
 `;
-const $2cf6a2d8a6d031bc$var$script = new Blob([
-    $2cf6a2d8a6d031bc$var$AudioProcessorWorklet
+const $8e1d1e6ff08f6fb5$var$script = new Blob([
+    $8e1d1e6ff08f6fb5$var$AudioProcessorWorklet
 ], {
     type: 'application/javascript'
 });
-const $2cf6a2d8a6d031bc$var$src = URL.createObjectURL($2cf6a2d8a6d031bc$var$script);
-const $2cf6a2d8a6d031bc$export$1f65f50a8cbff43c = $2cf6a2d8a6d031bc$var$src;
+const $8e1d1e6ff08f6fb5$var$src = URL.createObjectURL($8e1d1e6ff08f6fb5$var$script);
+const $8e1d1e6ff08f6fb5$export$1f65f50a8cbff43c = $8e1d1e6ff08f6fb5$var$src;
 
 
 
 
-class $0d471c38435bdab6$export$439b217ca659a877 {
+class $62bc376044a05513$export$439b217ca659a877 {
     /**
    * Create a new WavRecorder instance
    * @param {{sampleRate?: number, outputToSpeakers?: boolean, debug?: boolean}} [options]
    * @returns {WavRecorder}
    */ constructor({ sampleRate: sampleRate = 44100, outputToSpeakers: outputToSpeakers = false, debug: debug = false } = {}){
         // Script source
-        this.scriptSrc = (0, $2cf6a2d8a6d031bc$export$1f65f50a8cbff43c);
+        this.scriptSrc = (0, $8e1d1e6ff08f6fb5$export$1f65f50a8cbff43c);
         // Config
         this.sampleRate = sampleRate;
         this.outputToSpeakers = outputToSpeakers;
@@ -856,7 +835,7 @@ class $0d471c38435bdab6$export$439b217ca659a877 {
             else throw new Error(`"audioData" must be one of: Blob, Float32Arrray, Int16Array, ArrayBuffer, Array<number>`);
             if (fromSampleRate === -1) throw new Error(`Must specify "fromSampleRate" when reading from Float32Array, In16Array or Array`);
             else if (fromSampleRate < 3000) throw new Error(`Minimum "fromSampleRate" is 3000 (3kHz)`);
-            if (!data) data = (0, $a61750b8fbee4dae$export$13afda237b1c9846).floatTo16BitPCM(float32Array);
+            if (!data) data = (0, $6d4b7449a1e1544a$export$13afda237b1c9846).floatTo16BitPCM(float32Array);
             const audio = {
                 bitsPerSample: 16,
                 channels: [
@@ -864,7 +843,7 @@ class $0d471c38435bdab6$export$439b217ca659a877 {
                 ],
                 data: data
             };
-            const packer = new (0, $a61750b8fbee4dae$export$13afda237b1c9846)();
+            const packer = new (0, $6d4b7449a1e1544a$export$13afda237b1c9846)();
             const result = packer.pack(fromSampleRate, audio);
             blob = result.blob;
             arrayBuffer = await blob.arrayBuffer();
@@ -1086,8 +1065,8 @@ class $0d471c38435bdab6$export$439b217ca659a877 {
                 if (this._chunkProcessorSize) {
                     const buffer = this._chunkProcessorBuffer;
                     this._chunkProcessorBuffer = {
-                        raw: (0, $a61750b8fbee4dae$export$13afda237b1c9846).mergeBuffers(buffer.raw, data.raw),
-                        mono: (0, $a61750b8fbee4dae$export$13afda237b1c9846).mergeBuffers(buffer.mono, data.mono)
+                        raw: (0, $6d4b7449a1e1544a$export$13afda237b1c9846).mergeBuffers(buffer.raw, data.raw),
+                        mono: (0, $6d4b7449a1e1544a$export$13afda237b1c9846).mergeBuffers(buffer.mono, data.mono)
                     };
                     if (this._chunkProcessorBuffer.mono.byteLength >= this._chunkProcessorSize) {
                         this._chunkProcessor(this._chunkProcessorBuffer);
@@ -1124,7 +1103,7 @@ class $0d471c38435bdab6$export$439b217ca659a877 {
    * @returns {import('./analysis/audio_analysis.js').AudioAnalysisOutputType}
    */ getFrequencies(analysisType = 'frequency', minDecibels = -100, maxDecibels = -30) {
         if (!this.processor) throw new Error('Session ended: please call .begin() first');
-        return (0, $5853841ab58516d4$export$2c3136da0bf130f9).getFrequencies(this.analyser, this.sampleRate, null, analysisType, minDecibels, maxDecibels);
+        return (0, $f32f064564ee62f6$export$2c3136da0bf130f9).getFrequencies(this.analyser, this.sampleRate, null, analysisType, minDecibels, maxDecibels);
     }
     /**
    * Pauses the recording
@@ -1185,7 +1164,7 @@ class $0d471c38435bdab6$export$439b217ca659a877 {
         if (!force && this.recording) throw new Error('Currently recording: please call .pause() first, or call .save(true) to force');
         this.log('Exporting ...');
         const exportData = await this._event('export');
-        const packer = new (0, $a61750b8fbee4dae$export$13afda237b1c9846)();
+        const packer = new (0, $6d4b7449a1e1544a$export$13afda237b1c9846)();
         const result = packer.pack(this.sampleRate, exportData.audio);
         return result;
     }
@@ -1210,7 +1189,7 @@ class $0d471c38435bdab6$export$439b217ca659a877 {
         this.processor = null;
         this.source = null;
         this.node = null;
-        const packer = new (0, $a61750b8fbee4dae$export$13afda237b1c9846)();
+        const packer = new (0, $6d4b7449a1e1544a$export$13afda237b1c9846)();
         const result = packer.pack(this.sampleRate, exportData.audio);
         return result;
     }
@@ -1226,20 +1205,20 @@ class $0d471c38435bdab6$export$439b217ca659a877 {
         return true;
     }
 }
-globalThis.WavRecorder = $0d471c38435bdab6$export$439b217ca659a877;
+globalThis.WavRecorder = $62bc376044a05513$export$439b217ca659a877;
 
 
 
 
 
-class $7cef7a69bdf8f84d$export$2934cf2d25c67a48 {
+class $5fc11d7bc0d20724$export$2934cf2d25c67a48 {
     /**
    * Create a new MediaStreamRecorder instance
    * @param {{sampleRate?: number, outputToSpeakers?: boolean, debug?: boolean}} [options]
    * @returns {MediaStreamRecorder}
    */ constructor({ sampleRate: sampleRate = 44100, outputToSpeakers: outputToSpeakers = false, debug: debug = false } = {}){
         // Script source
-        this.scriptSrc = (0, $2cf6a2d8a6d031bc$export$1f65f50a8cbff43c);
+        this.scriptSrc = (0, $8e1d1e6ff08f6fb5$export$1f65f50a8cbff43c);
         // Config
         this.sampleRate = sampleRate;
         this.outputToSpeakers = outputToSpeakers;
@@ -1339,8 +1318,8 @@ class $7cef7a69bdf8f84d$export$2934cf2d25c67a48 {
                 if (this._chunkProcessorSize) {
                     const buffer = this._chunkProcessorBuffer;
                     this._chunkProcessorBuffer = {
-                        raw: (0, $a61750b8fbee4dae$export$13afda237b1c9846).mergeBuffers(buffer.raw, data.raw),
-                        mono: (0, $a61750b8fbee4dae$export$13afda237b1c9846).mergeBuffers(buffer.mono, data.mono)
+                        raw: (0, $6d4b7449a1e1544a$export$13afda237b1c9846).mergeBuffers(buffer.raw, data.raw),
+                        mono: (0, $6d4b7449a1e1544a$export$13afda237b1c9846).mergeBuffers(buffer.mono, data.mono)
                     };
                     if (this._chunkProcessorBuffer.mono.byteLength >= this._chunkProcessorSize) {
                         this._chunkProcessor(this._chunkProcessorBuffer);
@@ -1376,7 +1355,7 @@ class $7cef7a69bdf8f84d$export$2934cf2d25c67a48 {
    * @returns {import('./analysis/audio_analysis.js').AudioAnalysisOutputType}
    */ getFrequencies(analysisType = "frequency", minDecibels = -100, maxDecibels = -30) {
         if (!this.processor) throw new Error("Session ended: please call .begin() first");
-        return (0, $5853841ab58516d4$export$2c3136da0bf130f9).getFrequencies(this.analyser, this.sampleRate, null, analysisType, minDecibels, maxDecibels);
+        return (0, $f32f064564ee62f6$export$2c3136da0bf130f9).getFrequencies(this.analyser, this.sampleRate, null, analysisType, minDecibels, maxDecibels);
     }
     /**
    * Pauses the recording
@@ -1437,7 +1416,7 @@ class $7cef7a69bdf8f84d$export$2934cf2d25c67a48 {
         if (!force && this.recording) throw new Error("Currently recording: please call .pause() first, or call .save(true) to force");
         this.log("Exporting ...");
         const exportData = await this._event("export");
-        const packer = new (0, $a61750b8fbee4dae$export$13afda237b1c9846)();
+        const packer = new (0, $6d4b7449a1e1544a$export$13afda237b1c9846)();
         const result = packer.pack(this.sampleRate, exportData.audio);
         return result;
     }
@@ -1460,7 +1439,7 @@ class $7cef7a69bdf8f84d$export$2934cf2d25c67a48 {
         this.processor = null;
         this.source = null;
         this.node = null;
-        const packer = new (0, $a61750b8fbee4dae$export$13afda237b1c9846)();
+        const packer = new (0, $6d4b7449a1e1544a$export$13afda237b1c9846)();
         const result = packer.pack(this.sampleRate, exportData.audio);
         return result;
     }
@@ -1480,7 +1459,7 @@ globalThis.WavRecorder = WavRecorder;
 
 
 
-var $23859655abfc5f5c$var$__extends = undefined && undefined.__extends || function() {
+var $fc49a56cd8739127$var$__extends = undefined && undefined.__extends || function() {
     var extendStatics = function(d, b) {
         extendStatics = Object.setPrototypeOf || ({
             __proto__: []
@@ -1500,7 +1479,7 @@ var $23859655abfc5f5c$var$__extends = undefined && undefined.__extends || functi
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 }();
-var $23859655abfc5f5c$var$__awaiter = undefined && undefined.__awaiter || function(thisArg, _arguments, P, generator) {
+var $fc49a56cd8739127$var$__awaiter = undefined && undefined.__awaiter || function(thisArg, _arguments, P, generator) {
     function adopt(value) {
         return value instanceof P ? value : new P(function(resolve) {
             resolve(value);
@@ -1527,7 +1506,7 @@ var $23859655abfc5f5c$var$__awaiter = undefined && undefined.__awaiter || functi
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var $23859655abfc5f5c$var$__generator = undefined && undefined.__generator || function(thisArg, body) {
+var $fc49a56cd8739127$var$__generator = undefined && undefined.__generator || function(thisArg, body) {
     var _ = {
         label: 0,
         sent: function() {
@@ -1618,7 +1597,7 @@ var $23859655abfc5f5c$var$__generator = undefined && undefined.__generator || fu
         };
     }
 };
-var $23859655abfc5f5c$export$4a0c46dbbe2ddb67 = /** @class */ function() {
+var $fc49a56cd8739127$export$4a0c46dbbe2ddb67 = /** @class */ function() {
     function MediaManager() {
         this._callbacks = {};
         this._micEnabled = true;
@@ -1646,8 +1625,8 @@ var $23859655abfc5f5c$export$4a0c46dbbe2ddb67 = /** @class */ function() {
     });
     return MediaManager;
 }();
-var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
-    $23859655abfc5f5c$var$__extends(WavMediaManager, _super);
+var $fc49a56cd8739127$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
+    $fc49a56cd8739127$var$__extends(WavMediaManager, _super);
     function WavMediaManager(recorderChunkSize, recorderSampleRate) {
         if (recorderChunkSize === void 0) recorderChunkSize = undefined;
         if (recorderSampleRate === void 0) recorderSampleRate = 24000;
@@ -1655,18 +1634,18 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
         _this._initialized = false;
         _this._recorderChunkSize = undefined;
         _this._recorderChunkSize = recorderChunkSize;
-        _this._wavRecorder = new (0, $0d471c38435bdab6$export$439b217ca659a877)({
+        _this._wavRecorder = new (0, $62bc376044a05513$export$439b217ca659a877)({
             sampleRate: recorderSampleRate
         });
-        _this._wavStreamPlayer = new (0, $1e7ce9484a3c4077$export$9698d62c78b8f366)({
+        _this._wavStreamPlayer = new (0, $d0a969833958d9e7$export$9698d62c78b8f366)({
             sampleRate: 24000
         });
         return _this;
     }
     WavMediaManager.prototype.initialize = function() {
-        return $23859655abfc5f5c$var$__awaiter(this, void 0, Promise, function() {
+        return $fc49a56cd8739127$var$__awaiter(this, void 0, Promise, function() {
             var error_1;
-            return $23859655abfc5f5c$var$__generator(this, function(_a) {
+            return $fc49a56cd8739127$var$__generator(this, function(_a) {
                 switch(_a.label){
                     case 0:
                         _a.trys.push([
@@ -1711,9 +1690,9 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
         });
     };
     WavMediaManager.prototype.connect = function() {
-        return $23859655abfc5f5c$var$__awaiter(this, void 0, Promise, function() {
+        return $fc49a56cd8739127$var$__awaiter(this, void 0, Promise, function() {
             var isAlreadyRecording;
-            return $23859655abfc5f5c$var$__generator(this, function(_a) {
+            return $fc49a56cd8739127$var$__generator(this, function(_a) {
                 switch(_a.label){
                     case 0:
                         if (!!this._initialized) return [
@@ -1750,8 +1729,8 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
         });
     };
     WavMediaManager.prototype.disconnect = function() {
-        return $23859655abfc5f5c$var$__awaiter(this, void 0, Promise, function() {
-            return $23859655abfc5f5c$var$__generator(this, function(_a) {
+        return $fc49a56cd8739127$var$__awaiter(this, void 0, Promise, function() {
+            return $fc49a56cd8739127$var$__generator(this, function(_a) {
                 switch(_a.label){
                     case 0:
                         if (!this._initialized) return [
@@ -1778,8 +1757,8 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
         });
     };
     WavMediaManager.prototype.userStartedSpeaking = function() {
-        return $23859655abfc5f5c$var$__awaiter(this, void 0, Promise, function() {
-            return $23859655abfc5f5c$var$__generator(this, function(_a) {
+        return $fc49a56cd8739127$var$__awaiter(this, void 0, Promise, function() {
+            return $fc49a56cd8739127$var$__generator(this, function(_a) {
                 return [
                     2 /*return*/ ,
                     this._wavStreamPlayer.interrupt()
@@ -1802,10 +1781,10 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
         return Promise.resolve([]);
     };
     WavMediaManager.prototype.updateMic = function(micId) {
-        return $23859655abfc5f5c$var$__awaiter(this, void 0, Promise, function() {
+        return $fc49a56cd8739127$var$__awaiter(this, void 0, Promise, function() {
             var prevMic, curMic, error_2;
             var _a, _b;
-            return $23859655abfc5f5c$var$__generator(this, function(_c) {
+            return $fc49a56cd8739127$var$__generator(this, function(_c) {
                 switch(_c.label){
                     case 0:
                         prevMic = this._wavRecorder.deviceSelection;
@@ -1896,9 +1875,9 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
         configurable: true
     });
     WavMediaManager.prototype.enableMic = function(enable) {
-        return $23859655abfc5f5c$var$__awaiter(this, void 0, Promise, function() {
+        return $fc49a56cd8739127$var$__awaiter(this, void 0, Promise, function() {
             var _this = this;
-            return $23859655abfc5f5c$var$__generator(this, function(_a) {
+            return $fc49a56cd8739127$var$__generator(this, function(_a) {
                 switch(_a.label){
                     case 0:
                         this._micEnabled = enable;
@@ -1908,7 +1887,7 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
                         this._wavRecorder.stream.getAudioTracks().forEach(function(track) {
                             var _a, _b;
                             track.enabled = enable;
-                            if (!enable) (_b = (_a = _this._callbacks).onTrackStopped) === null || _b === void 0 || _b.call(_a, track, $23859655abfc5f5c$var$localParticipant());
+                            if (!enable) (_b = (_a = _this._callbacks).onTrackStopped) === null || _b === void 0 || _b.call(_a, track, $fc49a56cd8739127$var$localParticipant());
                         });
                         if (!enable) return [
                             3 /*break*/ ,
@@ -1981,11 +1960,11 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
         };
     };
     WavMediaManager.prototype._startRecording = function() {
-        return $23859655abfc5f5c$var$__awaiter(this, void 0, void 0, function() {
+        return $fc49a56cd8739127$var$__awaiter(this, void 0, void 0, function() {
             var track;
             var _this = this;
             var _a, _b, _c;
-            return $23859655abfc5f5c$var$__generator(this, function(_d) {
+            return $fc49a56cd8739127$var$__generator(this, function(_d) {
                 switch(_d.label){
                     case 0:
                         return [
@@ -1998,7 +1977,7 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
                     case 1:
                         _d.sent();
                         track = (_a = this._wavRecorder.stream) === null || _a === void 0 ? void 0 : _a.getAudioTracks()[0];
-                        if (track) (_c = (_b = this._callbacks).onTrackStarted) === null || _c === void 0 || _c.call(_b, track, $23859655abfc5f5c$var$localParticipant());
+                        if (track) (_c = (_b = this._callbacks).onTrackStarted) === null || _c === void 0 || _c.call(_b, track, $fc49a56cd8739127$var$localParticipant());
                         return [
                             2 /*return*/ 
                         ];
@@ -2027,14 +2006,14 @@ var $23859655abfc5f5c$export$45c5b9bfba2f6304 = /** @class */ function(_super) {
     WavMediaManager.prototype._handleDeviceError = function(_a) {
         var _b, _c;
         var devices = _a.devices, type = _a.type, error = _a.error;
-        var deviceError = new (0, $7ytRB$pipecataiclientjs.DeviceError)(devices, type, error === null || error === void 0 ? void 0 : error.message, error ? {
+        var deviceError = new (0, $3GNns$DeviceError)(devices, type, error === null || error === void 0 ? void 0 : error.message, error ? {
             sourceError: error
         } : undefined);
         (_c = (_b = this._callbacks).onDeviceError) === null || _c === void 0 || _c.call(_b, deviceError);
     };
     return WavMediaManager;
-}($23859655abfc5f5c$export$4a0c46dbbe2ddb67);
-var $23859655abfc5f5c$var$localParticipant = function() {
+}($fc49a56cd8739127$export$4a0c46dbbe2ddb67);
+var $fc49a56cd8739127$var$localParticipant = function() {
     return {
         id: "local",
         name: "",
@@ -2046,8 +2025,7 @@ var $23859655abfc5f5c$var$localParticipant = function() {
 
 
 
-
-var $1c088932741d88e6$var$__extends = undefined && undefined.__extends || function() {
+var $22ece045290c996a$var$__extends = undefined && undefined.__extends || function() {
     var extendStatics = function(d, b) {
         extendStatics = Object.setPrototypeOf || ({
             __proto__: []
@@ -2067,7 +2045,7 @@ var $1c088932741d88e6$var$__extends = undefined && undefined.__extends || functi
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 }();
-var $1c088932741d88e6$var$__awaiter = undefined && undefined.__awaiter || function(thisArg, _arguments, P, generator) {
+var $22ece045290c996a$var$__awaiter = undefined && undefined.__awaiter || function(thisArg, _arguments, P, generator) {
     function adopt(value) {
         return value instanceof P ? value : new P(function(resolve) {
             resolve(value);
@@ -2094,7 +2072,7 @@ var $1c088932741d88e6$var$__awaiter = undefined && undefined.__awaiter || functi
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var $1c088932741d88e6$var$__generator = undefined && undefined.__generator || function(thisArg, body) {
+var $22ece045290c996a$var$__generator = undefined && undefined.__generator || function(thisArg, body) {
     var _ = {
         label: 0,
         sent: function() {
@@ -2185,8 +2163,8 @@ var $1c088932741d88e6$var$__generator = undefined && undefined.__generator || fu
         };
     }
 };
-var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
-    $1c088932741d88e6$var$__extends(DailyMediaManager, _super);
+var $22ece045290c996a$export$c95c65abc5f47125 = /** @class */ function(_super) {
+    $22ece045290c996a$var$__extends(DailyMediaManager, _super);
     function DailyMediaManager(enablePlayer, enableRecording, onTrackStartedCallback, onTrackStoppedCallback, recorderChunkSize, recorderSampleRate, playerSampleRate) {
         if (enablePlayer === void 0) enablePlayer = true;
         if (enableRecording === void 0) enableRecording = true;
@@ -2208,11 +2186,11 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         _this.onTrackStoppedCallback = onTrackStoppedCallback;
         _this._recorderChunkSize = recorderChunkSize;
         _this._supportsScreenShare = true;
-        _this._daily = (_a = (0, ($parcel$interopDefault($7ytRB$dailycodailyjs))).getCallInstance()) !== null && _a !== void 0 ? _a : (0, ($parcel$interopDefault($7ytRB$dailycodailyjs))).createCallObject();
-        if (enableRecording) _this._mediaStreamRecorder = new (0, $7cef7a69bdf8f84d$export$2934cf2d25c67a48)({
+        _this._daily = (_a = (0, $3GNns$dailycodailyjs).getCallInstance()) !== null && _a !== void 0 ? _a : (0, $3GNns$dailycodailyjs).createCallObject();
+        if (enableRecording) _this._mediaStreamRecorder = new (0, $5fc11d7bc0d20724$export$2934cf2d25c67a48)({
             sampleRate: recorderSampleRate
         });
-        if (enablePlayer) _this._wavStreamPlayer = new (0, $1e7ce9484a3c4077$export$9698d62c78b8f366)({
+        if (enablePlayer) _this._wavStreamPlayer = new (0, $d0a969833958d9e7$export$9698d62c78b8f366)({
             sampleRate: playerSampleRate
         });
         _this._daily.on("track-started", _this.handleTrackStarted.bind(_this));
@@ -2224,11 +2202,11 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         return _this;
     }
     DailyMediaManager.prototype.initialize = function() {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var infos, devices, cams, mics, speakers;
             var _this = this;
             var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
-            return $1c088932741d88e6$var$__generator(this, function(_o) {
+            return $22ece045290c996a$var$__generator(this, function(_o) {
                 switch(_o.label){
                     case 0:
                         if (this._initialized) {
@@ -2315,9 +2293,9 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         });
     };
     DailyMediaManager.prototype.connect = function() {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var _this = this;
-            return $1c088932741d88e6$var$__generator(this, function(_a) {
+            return $22ece045290c996a$var$__generator(this, function(_a) {
                 if (this._connected) {
                     console.warn("DailyMediaManager already connected");
                     return [
@@ -2329,8 +2307,8 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
                     2 /*return*/ ,
                     new Promise(function(resolve) {
                         (function() {
-                            return $1c088932741d88e6$var$__awaiter(_this, void 0, void 0, function() {
-                                return $1c088932741d88e6$var$__generator(this, function(_a) {
+                            return $22ece045290c996a$var$__awaiter(_this, void 0, void 0, function() {
+                                return $22ece045290c996a$var$__generator(this, function(_a) {
                                     switch(_a.label){
                                         case 0:
                                             this._connectResolve = resolve;
@@ -2357,9 +2335,9 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         });
     };
     DailyMediaManager.prototype.disconnect = function() {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var _a, _b;
-            return $1c088932741d88e6$var$__generator(this, function(_c) {
+            return $22ece045290c996a$var$__generator(this, function(_c) {
                 switch(_c.label){
                     case 0:
                         if (this._remoteAudioLevelInterval) clearInterval(this._remoteAudioLevelInterval);
@@ -2383,9 +2361,9 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         });
     };
     DailyMediaManager.prototype.userStartedSpeaking = function() {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var _a;
-            return $1c088932741d88e6$var$__generator(this, function(_b) {
+            return $22ece045290c996a$var$__generator(this, function(_b) {
                 return [
                     2 /*return*/ ,
                     (_a = this._wavStreamPlayer) === null || _a === void 0 ? void 0 : _a.interrupt()
@@ -2398,9 +2376,9 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         return (_a = this._wavStreamPlayer) === null || _a === void 0 ? void 0 : _a.add16BitPCM(data, id);
     };
     DailyMediaManager.prototype.getAllMics = function() {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var devices;
-            return $1c088932741d88e6$var$__generator(this, function(_a) {
+            return $22ece045290c996a$var$__generator(this, function(_a) {
                 switch(_a.label){
                     case 0:
                         return [
@@ -2420,9 +2398,9 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         });
     };
     DailyMediaManager.prototype.getAllCams = function() {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var devices;
-            return $1c088932741d88e6$var$__generator(this, function(_a) {
+            return $22ece045290c996a$var$__generator(this, function(_a) {
                 switch(_a.label){
                     case 0:
                         return [
@@ -2442,9 +2420,9 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         });
     };
     DailyMediaManager.prototype.getAllSpeakers = function() {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var devices;
-            return $1c088932741d88e6$var$__generator(this, function(_a) {
+            return $22ece045290c996a$var$__generator(this, function(_a) {
                 switch(_a.label){
                     case 0:
                         return [
@@ -2480,11 +2458,11 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         });
     };
     DailyMediaManager.prototype.updateSpeaker = function(speakerId) {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var sID, speakers, defaultSpeaker_1, defaultSpeakerCp;
             var _this = this;
             var _a, _b;
-            return $1c088932741d88e6$var$__generator(this, function(_c) {
+            return $22ece045290c996a$var$__generator(this, function(_c) {
                 switch(_c.label){
                     case 0:
                         if (speakerId !== "default" && this._selectedSpeaker.deviceId === speakerId) return [
@@ -2553,9 +2531,9 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         configurable: true
     });
     DailyMediaManager.prototype.enableMic = function(enable) {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, Promise, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, Promise, function() {
             var _a;
-            return $1c088932741d88e6$var$__generator(this, function(_b) {
+            return $22ece045290c996a$var$__generator(this, function(_b) {
                 this._micEnabled = enable;
                 if (!((_a = this._daily.participants()) === null || _a === void 0 ? void 0 : _a.local)) return [
                     2 /*return*/ 
@@ -2659,37 +2637,37 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
                     error.blockedMedia.forEach(function(d) {
                         devices.push(d === "video" ? "cam" : "mic");
                     });
-                    return new (0, $7ytRB$pipecataiclientjs.DeviceError)(devices, error.type, error.msg, {
+                    return new (0, $3GNns$DeviceError)(devices, error.type, error.msg, {
                         blockedBy: error.blockedBy
                     });
                 case "not-found":
                     error.missingMedia.forEach(function(d) {
                         devices.push(d === "video" ? "cam" : "mic");
                     });
-                    return new (0, $7ytRB$pipecataiclientjs.DeviceError)(devices, error.type, error.msg);
+                    return new (0, $3GNns$DeviceError)(devices, error.type, error.msg);
                 case "constraints":
                     error.failedMedia.forEach(function(d) {
                         devices.push(d === "video" ? "cam" : "mic");
                     });
-                    return new (0, $7ytRB$pipecataiclientjs.DeviceError)(devices, error.type, error.msg, {
+                    return new (0, $3GNns$DeviceError)(devices, error.type, error.msg, {
                         reason: error.reason
                     });
                 case "cam-in-use":
                     devices.push("cam");
-                    return new (0, $7ytRB$pipecataiclientjs.DeviceError)(devices, "in-use", error.msg);
+                    return new (0, $3GNns$DeviceError)(devices, "in-use", error.msg);
                 case "mic-in-use":
                     devices.push("mic");
-                    return new (0, $7ytRB$pipecataiclientjs.DeviceError)(devices, "in-use", error.msg);
+                    return new (0, $3GNns$DeviceError)(devices, "in-use", error.msg);
                 case "cam-mic-in-use":
                     devices.push("cam");
                     devices.push("mic");
-                    return new (0, $7ytRB$pipecataiclientjs.DeviceError)(devices, "in-use", error.msg);
+                    return new (0, $3GNns$DeviceError)(devices, "in-use", error.msg);
                 case "undefined-mediadevices":
                 case "unknown":
                 default:
                     devices.push("cam");
                     devices.push("mic");
-                    return new (0, $7ytRB$pipecataiclientjs.DeviceError)(devices, error.type, error.msg);
+                    return new (0, $3GNns$DeviceError)(devices, error.type, error.msg);
             }
         };
         (_b = (_a = this._callbacks).onDeviceError) === null || _b === void 0 || _b.call(_a, generateDeviceError(ev.error));
@@ -2700,13 +2678,13 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
     };
     DailyMediaManager.prototype._handleRemoteAudioLevel = function(audioLevel) {
         var _a, _b;
-        (_b = (_a = this._callbacks).onRemoteAudioLevel) === null || _b === void 0 || _b.call(_a, audioLevel, $1c088932741d88e6$var$botParticipant());
+        (_b = (_a = this._callbacks).onRemoteAudioLevel) === null || _b === void 0 || _b.call(_a, audioLevel, $22ece045290c996a$var$botParticipant());
     };
     DailyMediaManager.prototype.handleTrackStarted = function(event) {
-        return $1c088932741d88e6$var$__awaiter(this, void 0, void 0, function() {
+        return $22ece045290c996a$var$__awaiter(this, void 0, void 0, function() {
             var status, _a, e_1, e_2;
             var _b, _c, _d, _e;
-            return $1c088932741d88e6$var$__generator(this, function(_f) {
+            return $22ece045290c996a$var$__generator(this, function(_f) {
                 switch(_f.label){
                     case 0:
                         if (!((_b = event.participant) === null || _b === void 0 ? void 0 : _b.local)) return [
@@ -2837,7 +2815,7 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
                         this._currentAudioTrack = event.track;
                         _f.label = 15;
                     case 15:
-                        (_d = (_c = this._callbacks).onTrackStarted) === null || _d === void 0 || _d.call(_c, event.track, event.participant ? $1c088932741d88e6$var$dailyParticipantToParticipant(event.participant) : undefined);
+                        (_d = (_c = this._callbacks).onTrackStarted) === null || _d === void 0 || _d.call(_c, event.track, event.participant ? $22ece045290c996a$var$dailyParticipantToParticipant(event.participant) : undefined);
                         (_e = this.onTrackStartedCallback) === null || _e === void 0 || _e.call(this, event);
                         return [
                             2 /*return*/ 
@@ -2852,19 +2830,19 @@ var $1c088932741d88e6$export$c95c65abc5f47125 = /** @class */ function(_super) {
         if (event.track.kind === "audio") {
             if (this._mediaStreamRecorder && this._mediaStreamRecorder.getStatus() === "recording") this._mediaStreamRecorder.pause();
         }
-        (_c = (_b = this._callbacks).onTrackStopped) === null || _c === void 0 || _c.call(_b, event.track, event.participant ? $1c088932741d88e6$var$dailyParticipantToParticipant(event.participant) : undefined);
+        (_c = (_b = this._callbacks).onTrackStopped) === null || _c === void 0 || _c.call(_b, event.track, event.participant ? $22ece045290c996a$var$dailyParticipantToParticipant(event.participant) : undefined);
         (_d = this.onTrackStoppedCallback) === null || _d === void 0 || _d.call(this, event);
     };
     return DailyMediaManager;
-}((0, $23859655abfc5f5c$export$4a0c46dbbe2ddb67));
-var $1c088932741d88e6$var$dailyParticipantToParticipant = function(p) {
+}((0, $fc49a56cd8739127$export$4a0c46dbbe2ddb67));
+var $22ece045290c996a$var$dailyParticipantToParticipant = function(p) {
     return {
         id: p.user_id,
         local: p.local,
         name: p.user_name
     };
 };
-var $1c088932741d88e6$var$botParticipant = function() {
+var $22ece045290c996a$var$botParticipant = function() {
     return {
         id: "bot",
         local: false,
@@ -2873,652 +2851,868 @@ var $1c088932741d88e6$var$botParticipant = function() {
 };
 
 
-var $8381b73e1f76ead9$exports = {};
-
-$parcel$export($8381b73e1f76ead9$exports, "SmallWebRTCTransport", () => $8381b73e1f76ead9$export$62043589d053a879);
 
 
+var $032380dbcf3f4e13$var$__extends = undefined && undefined.__extends || function() {
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf || ({
+            __proto__: []
+        }) instanceof Array && function(d, b) {
+            d.__proto__ = b;
+        } || function(d, b) {
+            for(var p in b)if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+        };
+        return extendStatics(d, b);
+    };
+    return function(d, b) {
+        if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() {
+            this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+}();
+var $032380dbcf3f4e13$var$__awaiter = undefined && undefined.__awaiter || function(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+        return value instanceof P ? value : new P(function(resolve) {
+            resolve(value);
+        });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+        function fulfilled(value) {
+            try {
+                step(generator.next(value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function rejected(value) {
+            try {
+                step(generator["throw"](value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function step(result) {
+            result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var $032380dbcf3f4e13$var$__generator = undefined && undefined.__generator || function(thisArg, body) {
+    var _ = {
+        label: 0,
+        sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+        },
+        trys: [],
+        ops: []
+    }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+        return this;
+    }), g;
+    function verb(n) {
+        return function(v) {
+            return step([
+                n,
+                v
+            ]);
+        };
+    }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while(g && (g = 0, op[0] && (_ = 0)), _)try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [
+                op[0] & 2,
+                t.value
+            ];
+            switch(op[0]){
+                case 0:
+                case 1:
+                    t = op;
+                    break;
+                case 4:
+                    _.label++;
+                    return {
+                        value: op[1],
+                        done: false
+                    };
+                case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [
+                        0
+                    ];
+                    continue;
+                case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        _ = 0;
+                        continue;
+                    }
+                    if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+                        _.label = op[1];
+                        break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                        _.label = t[1];
+                        t = op;
+                        break;
+                    }
+                    if (t && _.label < t[2]) {
+                        _.label = t[2];
+                        _.ops.push(op);
+                        break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) {
+            op = [
+                6,
+                e
+            ];
+            y = 0;
+        } finally{
+            f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+            value: op[0] ? op[1] : void 0,
+            done: true
+        };
+    }
+};
+var $032380dbcf3f4e13$var$__spreadArray = undefined && undefined.__spreadArray || function(to, from, pack) {
+    if (pack || arguments.length === 2) {
+        for(var i = 0, l = from.length, ar; i < l; i++)if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+var $032380dbcf3f4e13$var$readyStates = [
+    "CONNECTING",
+    "OPEN",
+    "CLOSING",
+    "CLOSED"
+];
+var $032380dbcf3f4e13$var$KEEP_ALIVE_INTERVAL = 5000;
+var $032380dbcf3f4e13$var$KEEP_ALIVE_TIMEOUT = 15000;
+// client side code in soupSFU has a timeout of 15 seconds for command response
+// 5 seconds seems reasonable that it provides roughly 3 retry attempts
+var $032380dbcf3f4e13$var$WEBSOCKET_CONNECTION_TIMEOUT = 150000;
+var $032380dbcf3f4e13$var$DEFAULT_RECONNECT_ATTEMPTS = 2;
+var $032380dbcf3f4e13$var$MAX_RECONNECT_ATTEMPTS = 10;
+var $032380dbcf3f4e13$var$DEFAULT_RECONNECT_INTERVAL = 1000;
+var $032380dbcf3f4e13$var$MAX_RECONNECT_INTERVAL = 30000;
+var $032380dbcf3f4e13$var$DEFAULT_RECONNECT_DECAY = 1.5;
+var $032380dbcf3f4e13$var$WEBSOCKET_TIMEOUT_CODE = 4100;
+var $032380dbcf3f4e13$var$SIG_CONNECTION_CANCELED = "SIG_CONNECTION_CANCELED";
+var $032380dbcf3f4e13$var$WEBSOCKET_ERROR = "WEBSOCKET_ERROR";
+var $032380dbcf3f4e13$var$LOG_LEVEL;
+(function(LOG_LEVEL) {
+    LOG_LEVEL[LOG_LEVEL["DEBUG"] = 0] = "DEBUG";
+    LOG_LEVEL[LOG_LEVEL["ERROR"] = 1] = "ERROR";
+    LOG_LEVEL[LOG_LEVEL["INFO"] = 2] = "INFO";
+    LOG_LEVEL[LOG_LEVEL["WARN"] = 3] = "WARN";
+})($032380dbcf3f4e13$var$LOG_LEVEL || ($032380dbcf3f4e13$var$LOG_LEVEL = {}));
+var $032380dbcf3f4e13$var$rWebSocket = /** @class */ function() {
+    function rWebSocket(url, protocols) {
+        this._closedManually = false;
+        this._errored = false;
+        this._rejected = false;
+        this._timed_out = false;
+        this._initialConnectionOk = false;
+        this._ws = new WebSocket(url, protocols);
+    }
+    rWebSocket.prototype.addEventListener = function(type, listener) {
+        this._ws.addEventListener(type, listener);
+    };
+    // Add other WebSocket methods as needed
+    rWebSocket.prototype.close = function(code, reason) {
+        this._ws.close(code, reason);
+    };
+    rWebSocket.prototype.send = function(data) {
+        this._ws.send(data);
+    };
+    Object.defineProperty(rWebSocket.prototype, "url", {
+        // Add getters for WebSocket properties
+        get: function() {
+            return this._ws.url;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(rWebSocket.prototype, "readyState", {
+        get: function() {
+            return this._ws.readyState;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return rWebSocket;
+}();
+/**
+ * Builds on top of Javascript Websockets
+ *
+ * This behaves like the Websocket library in every way, except if it fails to
+ * connect or if it gets disconnected, it will try to reconnect depending on
+ * the maximum number of reconnect attempts set. retry is not enabled for initial
+ * connection. When initial connection fails it is best to check yourself before
+ * you keep wreckin' yourself.
+ *
+ * It is API compatible, so when you have:
+ *   ws = new WebSocket('ws://....');
+ * you can replace with:
+ *   ws = new ReconnectingWebSocket('ws://....');
+ *
+ * While it is API compatible with the NodeJS ws library, we provide the
+ * following additional properties and events on the ReconnectingWebSocket.
+ *
+ * Events:
+ *
+ * connection-timeout
+ * - Emitted when the web socket connection times out.
+ *
+ * reconnecting
+ * - Emitted after a manual close of the web socket is done and before retrying
+ *   the connection.
+ *
+ * reconnect-failed
+ * - Emitted when the number of connection attempts exceeds the set number of
+ *   reconnection attempts.
+ *
+ * keep-alive
+ * - Emitted when the set keep alive interval elapses. This event may be used
+ *   to have ping pong keep-alive mechanism for web socket health.
+ *
+ * Properties:
+ *
+ * keepAliveTimeout
+ * - The timeout for keep-alive. Default: 15000
+ *
+ * keepAliveInterval
+ * - The interval at which to emit keep-alive event. Default: 5000
+ *
+ * shouldRetryFn
+ * - A callback function which should return boolean to determine if a web
+ *   socket reconnection attempt should be made. When not set, connection is
+ *   always retried.
+ *
+ * connectionTimeout
+ * - The timeout interval for considering whether the connection timed out.
+ *   Default: 20000 ms
+ *
+ * maxReconnectAttempts
+ * - The maximum number of attempts to be made for reconnection. Default: 2
+ *
+ * reconnectInterval
+ * - The interval to wait before attempting a reconnection. Default: 1000 ms
+ */ var $032380dbcf3f4e13$export$4f3d0ffd941ebefb = /** @class */ function(_super) {
+    $032380dbcf3f4e13$var$__extends(ReconnectingWebSocket, _super);
+    function ReconnectingWebSocket(address, protocols, options) {
+        if (options === void 0) options = {};
+        var _a;
+        var _this = _super.call(this) || this;
+        if (!address) throw new Error("Need a valid WebSocket URL");
+        _this._ws = null;
+        _this._url = address;
+        _this._protocols = protocols;
+        _this._parseBlobToJson = (_a = options === null || options === void 0 ? void 0 : options.parseBlobToJson) !== null && _a !== void 0 ? _a : true;
+        _this.init();
+        return _this;
+    }
+    ReconnectingWebSocket.prototype.init = function() {
+        this._keepAliveTimeout = $032380dbcf3f4e13$var$KEEP_ALIVE_TIMEOUT;
+        this._keepAliveInterval = $032380dbcf3f4e13$var$KEEP_ALIVE_INTERVAL;
+        this._disconnected = false;
+        this._keepIntervalID = null;
+        this._shouldRetryFn = null;
+        this._connectionTimeout = $032380dbcf3f4e13$var$WEBSOCKET_CONNECTION_TIMEOUT;
+        this._reconnectAttempts = 0;
+        this._allowedReconnectAttempts = $032380dbcf3f4e13$var$DEFAULT_RECONNECT_ATTEMPTS;
+        this._reconnectInterval = $032380dbcf3f4e13$var$DEFAULT_RECONNECT_INTERVAL;
+        this._maxReconnectInterval = $032380dbcf3f4e13$var$MAX_RECONNECT_INTERVAL;
+        this._reconnectDecay = $032380dbcf3f4e13$var$DEFAULT_RECONNECT_DECAY;
+    };
+    ReconnectingWebSocket.prototype.connect = function() {
+        return $032380dbcf3f4e13$var$__awaiter(this, void 0, void 0, function() {
+            var _this = this;
+            return $032380dbcf3f4e13$var$__generator(this, function(_a) {
+                return [
+                    2 /*return*/ ,
+                    new Promise(function(resolve, reject) {
+                        _this._disconnected = false;
+                        _this.clearReconnectTimeout();
+                        var ws = new $032380dbcf3f4e13$var$rWebSocket(_this._url, _this._protocols);
+                        _this.setConnectionTimeout();
+                        ws.addEventListener("close", function(evt) {
+                            var closeEvent = evt;
+                            var code = ws._timed_out ? $032380dbcf3f4e13$var$WEBSOCKET_TIMEOUT_CODE : closeEvent.code;
+                            var reason = ws._timed_out ? "websocket connection timed out" : closeEvent.reason;
+                            ws._timed_out = false;
+                            if (!ws._closedManually && ws._initialConnectionOk) {
+                                console.warn("signaling socket closed unexpectedly: ".concat(code).concat(reason ? " " + reason : ""));
+                                _this._closeSocket();
+                                _this.emit("close", code, reason);
+                            } else _this.log("signaling socket closed");
+                            if (!ws._closedManually && (ws._errored || ws._timed_out)) {
+                                console.warn("signaling socket closed on error: ".concat(code).concat(reason ? " " + reason : ""));
+                                if (!ws._rejected) {
+                                    ws._rejected = true;
+                                    var err = new Error("WebSocket connection error (".concat(code, "): ").concat(reason));
+                                    err.name = $032380dbcf3f4e13$var$WEBSOCKET_ERROR;
+                                    reject(err);
+                                }
+                            }
+                        });
+                        ws.addEventListener("open", function(evt) {
+                            _this.log("wss connection opened to", $032380dbcf3f4e13$var$LOG_LEVEL.DEBUG, _this._url);
+                            _this.clearConnectionTimeout();
+                            // now that the timeout closes the socket, in theory this onopen
+                            // callback should never happen in the first place, but seems
+                            // harmless to leave these safeguards in
+                            if (ws._rejected || ws._timed_out) return;
+                            if (ws._closedManually || _this._ws && _this._ws !== ws) {
+                                ws._rejected = true;
+                                ws.close();
+                                var err = Error("wss connection interrupted by disconnect or newer connection");
+                                err.name = $032380dbcf3f4e13$var$SIG_CONNECTION_CANCELED;
+                                reject(err);
+                                return;
+                            }
+                            ws._initialConnectionOk = _this._url;
+                            _this._lastMsgRecvTime = Date.now();
+                            if (_this._keepAliveInterval) _this._keepIntervalID = setInterval(function() {
+                                return _this.checkSocketHealthAndSendKeepAlive();
+                            }, _this._keepAliveInterval);
+                            _this._ws = ws;
+                            _this.emit("open");
+                            resolve(ws);
+                        });
+                        ws.addEventListener("error", function(evt) {
+                            // fyi: evt is an Event here, with 0 amount of helpful info. If there
+                            //   happens to be info about the error, it's included in the
+                            //   accompanying close event (because that make sense. shakes head)
+                            //   SO. We do not reject here. Instead, we just set the _errored
+                            //   flag on the socket so when the close event occurs, it knows to
+                            //   reject the promise
+                            if (!ws._closedManually) {
+                                var wsTarget = evt.currentTarget;
+                                _this.log("websocket error event: ".concat(wsTarget === null || wsTarget === void 0 ? void 0 : wsTarget.url));
+                            }
+                            ws._errored = true;
+                        });
+                        ws.addEventListener("message", function(msg) {
+                            _this._handleMessage(msg);
+                        });
+                    })
+                ];
+            });
+        });
+    };
+    ReconnectingWebSocket.prototype.setConnectionTimeout = function() {
+        var _this = this;
+        this._connectionTimeoutID = setTimeout(function() {
+            return $032380dbcf3f4e13$var$__awaiter(_this, void 0, void 0, function() {
+                return $032380dbcf3f4e13$var$__generator(this, function(_a) {
+                    switch(_a.label){
+                        case 0:
+                            this.log("Connection reconnect attempt timed out.");
+                            this.emit("connection-timeout");
+                            this.clearConnectionTimeout();
+                            return [
+                                4 /*yield*/ ,
+                                this._closeSocket()
+                            ];
+                        case 1:
+                            _a.sent();
+                            return [
+                                2 /*return*/ 
+                            ];
+                    }
+                });
+            });
+        }, this._connectionTimeout);
+    };
+    ReconnectingWebSocket.prototype.clearConnectionTimeout = function() {
+        clearTimeout(this._connectionTimeoutID);
+        this._connectionTimeoutID = undefined;
+    };
+    ReconnectingWebSocket.prototype.clearReconnectTimeout = function() {
+        clearTimeout(this._reconnectTimeoutID);
+        this._reconnectTimeoutID = undefined;
+    };
+    ReconnectingWebSocket.prototype.clearKeepAliveInterval = function() {
+        if (this._keepIntervalID) {
+            clearInterval(this._keepIntervalID);
+            this._keepIntervalID = null;
+        }
+    };
+    ReconnectingWebSocket.prototype.checkSocketHealthAndSendKeepAlive = function() {
+        return $032380dbcf3f4e13$var$__awaiter(this, void 0, void 0, function() {
+            return $032380dbcf3f4e13$var$__generator(this, function(_a) {
+                switch(_a.label){
+                    case 0:
+                        if (!(this._ws && this._ws.readyState === WebSocket.OPEN)) return [
+                            2 /*return*/ 
+                        ];
+                        if (!this._keepAliveTimeout || !this._keepAliveInterval) return [
+                            2 /*return*/ 
+                        ];
+                        if (!(Date.now() - this._lastMsgRecvTime > this._keepAliveTimeout)) return [
+                            3 /*break*/ ,
+                            2
+                        ];
+                        this.log("Connection is stale, need to reconnect", $032380dbcf3f4e13$var$LOG_LEVEL.WARN);
+                        return [
+                            4 /*yield*/ ,
+                            this._closeSocket()
+                        ];
+                    case 1:
+                        _a.sent();
+                        return [
+                            2 /*return*/ 
+                        ];
+                    case 2:
+                        // Only emit the keep-alive event if we haven't sent anything else recently
+                        if (Date.now() - this._lastMsgSendTime < this._keepAliveInterval) return [
+                            2 /*return*/ 
+                        ];
+                        this.log("Emitting keep-alive", $032380dbcf3f4e13$var$LOG_LEVEL.DEBUG);
+                        this.emit("keep-alive");
+                        return [
+                            2 /*return*/ 
+                        ];
+                }
+            });
+        });
+    };
+    // We use the word manually here to imply the application using this code
+    // or this code itself will decide to close the socket.
+    ReconnectingWebSocket.prototype._closeSocket = function() {
+        return $032380dbcf3f4e13$var$__awaiter(this, void 0, void 0, function() {
+            var shouldRetry, error_1;
+            var _a;
+            return $032380dbcf3f4e13$var$__generator(this, function(_b) {
+                switch(_b.label){
+                    case 0:
+                        this.log("Closing");
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([
+                            1,
+                            4,
+                            ,
+                            5
+                        ]);
+                        this.clearKeepAliveInterval();
+                        this._lastMsgRecvTime = 0;
+                        if (this._ws) {
+                            this._ws._closedManually = true;
+                            this._ws.close();
+                        }
+                        shouldRetry = ((_a = this._ws) === null || _a === void 0 ? void 0 : _a._initialConnectionOk) && this._shouldRetryFn && this._shouldRetryFn();
+                        this._ws = null;
+                        if (!shouldRetry) return [
+                            3 /*break*/ ,
+                            3
+                        ];
+                        this.log("Emitting reconnect", $032380dbcf3f4e13$var$LOG_LEVEL.DEBUG);
+                        this.emit("reconnecting");
+                        return [
+                            4 /*yield*/ ,
+                            this.retryFailedConnection()
+                        ];
+                    case 2:
+                        _b.sent();
+                        _b.label = 3;
+                    case 3:
+                        return [
+                            3 /*break*/ ,
+                            5
+                        ];
+                    case 4:
+                        error_1 = _b.sent();
+                        this.log("Error while closing and retrying: ".concat(error_1), $032380dbcf3f4e13$var$LOG_LEVEL.ERROR);
+                        return [
+                            3 /*break*/ ,
+                            5
+                        ];
+                    case 5:
+                        return [
+                            2 /*return*/ 
+                        ];
+                }
+            });
+        });
+    };
+    ReconnectingWebSocket.prototype.retryFailedConnection = function() {
+        return $032380dbcf3f4e13$var$__awaiter(this, void 0, void 0, function() {
+            var timeout;
+            var _this = this;
+            return $032380dbcf3f4e13$var$__generator(this, function(_a) {
+                if (this._reconnectAttempts < this._allowedReconnectAttempts) {
+                    if (this._reconnectTimeoutID) {
+                        this.log("Retry already scheduled");
+                        return [
+                            2 /*return*/ 
+                        ];
+                    }
+                    this.log("Retrying failed connection");
+                    timeout = // The timeout logic is taken from
+                    // https://github.com/joewalnes/reconnecting-websocket
+                    this._reconnectInterval * Math.pow(this._reconnectDecay, this._reconnectAttempts);
+                    timeout = timeout > this._maxReconnectInterval ? this._maxReconnectInterval : timeout;
+                    this.log("Reconnecting in ".concat(timeout / 1000, " seconds"));
+                    this._reconnectAttempts += 1;
+                    this._reconnectTimeoutID = setTimeout(function() {
+                        return _this.connect();
+                    }, timeout);
+                } else {
+                    this.log("Maximum connection retry attempts exceeded", $032380dbcf3f4e13$var$LOG_LEVEL.ERROR);
+                    this.emit("reconnect-failed");
+                }
+                return [
+                    2 /*return*/ 
+                ];
+            });
+        });
+    };
+    ReconnectingWebSocket.prototype.log = function(msg, log_level) {
+        if (log_level === void 0) log_level = $032380dbcf3f4e13$var$LOG_LEVEL.DEBUG;
+        var args = [];
+        for(var _i = 2; _i < arguments.length; _i++)args[_i - 2] = arguments[_i];
+        switch(log_level){
+            case $032380dbcf3f4e13$var$LOG_LEVEL.DEBUG:
+                console.debug.apply(console, $032380dbcf3f4e13$var$__spreadArray([
+                    "websocket: ".concat(msg)
+                ], args, false));
+                break;
+            case $032380dbcf3f4e13$var$LOG_LEVEL.ERROR:
+                console.error.apply(console, $032380dbcf3f4e13$var$__spreadArray([
+                    "websocket: ".concat(msg)
+                ], args, false));
+                break;
+            case $032380dbcf3f4e13$var$LOG_LEVEL.WARN:
+                console.warn.apply(console, $032380dbcf3f4e13$var$__spreadArray([
+                    "websocket: ".concat(msg)
+                ], args, false));
+                break;
+            case $032380dbcf3f4e13$var$LOG_LEVEL.INFO:
+            default:
+                console.log.apply(console, $032380dbcf3f4e13$var$__spreadArray([
+                    "websocket: ".concat(msg)
+                ], args, false));
+                break;
+        }
+    };
+    ReconnectingWebSocket.prototype.send = function(data) {
+        return $032380dbcf3f4e13$var$__awaiter(this, void 0, void 0, function() {
+            return $032380dbcf3f4e13$var$__generator(this, function(_a) {
+                try {
+                    if (this._ws && this._ws.readyState === WebSocket.OPEN) {
+                        this._lastMsgSendTime = Date.now();
+                        this._ws.send(data);
+                    } else this.log("Failed to send data, web socket not open.", $032380dbcf3f4e13$var$LOG_LEVEL.ERROR);
+                } catch (error) {
+                    this.log("Failed to send data. ".concat(error), $032380dbcf3f4e13$var$LOG_LEVEL.ERROR);
+                }
+                return [
+                    2 /*return*/ 
+                ];
+            });
+        });
+    };
+    ReconnectingWebSocket.prototype.close = function() {
+        return $032380dbcf3f4e13$var$__awaiter(this, void 0, void 0, function() {
+            return $032380dbcf3f4e13$var$__generator(this, function(_a) {
+                try {
+                    this.log("Closing websocket");
+                    this._disconnected = true;
+                    this.clearReconnectTimeout();
+                    this._closeSocket();
+                } catch (error) {
+                    this.log("Failed to close websocket. ".concat(error));
+                }
+                return [
+                    2 /*return*/ 
+                ];
+            });
+        });
+    };
+    Object.defineProperty(ReconnectingWebSocket.prototype, "readyState", {
+        get: function() {
+            var _a, _b;
+            return (_b = (_a = this._ws) === null || _a === void 0 ? void 0 : _a.readyState) !== null && _b !== void 0 ? _b : WebSocket.CLOSED;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReconnectingWebSocket.prototype, "url", {
+        get: function() {
+            return this._url;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReconnectingWebSocket.prototype, "keepAliveTimeout", {
+        get: function() {
+            return this._keepAliveTimeout;
+        },
+        set: function(keepAliveTimeout) {
+            if (typeof keepAliveTimeout === "number") {
+                this.log("Setting ACK freshness timeout to ".concat(keepAliveTimeout));
+                this._keepAliveTimeout = keepAliveTimeout;
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReconnectingWebSocket.prototype, "keepAliveInterval", {
+        get: function() {
+            return this._keepAliveInterval;
+        },
+        set: function(keepAliveInterval) {
+            if (typeof keepAliveInterval === "number") {
+                this.log("Setting keep-alive interval to ".concat(keepAliveInterval));
+                this._keepAliveInterval = keepAliveInterval;
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReconnectingWebSocket.prototype, "shouldRetryFn", {
+        set: function(cb) {
+            if (typeof cb === "function") this._shouldRetryFn = cb;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReconnectingWebSocket.prototype, "connectionTimeout", {
+        get: function() {
+            return this._connectionTimeout;
+        },
+        set: function(timeout) {
+            if (typeof timeout === "number") this._connectionTimeout = timeout;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReconnectingWebSocket.prototype, "maxReconnectAttempts", {
+        get: function() {
+            return this._allowedReconnectAttempts;
+        },
+        set: function(attempts) {
+            if (attempts > 0 && attempts < $032380dbcf3f4e13$var$MAX_RECONNECT_ATTEMPTS) {
+                this.log("Setting maximum connection retry attempts to ".concat(attempts));
+                this._allowedReconnectAttempts = attempts;
+            } else this._allowedReconnectAttempts = $032380dbcf3f4e13$var$DEFAULT_RECONNECT_ATTEMPTS;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(ReconnectingWebSocket.prototype, "reconnectInterval", {
+        get: function() {
+            return this._reconnectInterval;
+        },
+        set: function(interval) {
+            if (typeof interval === "number") this._reconnectInterval = interval < this._maxReconnectInterval ? interval : this._maxReconnectInterval;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    ReconnectingWebSocket.prototype._handleMessage = function(event) {
+        return $032380dbcf3f4e13$var$__awaiter(this, void 0, void 0, function() {
+            var data, _parsePromise, msg;
+            var _this = this;
+            return $032380dbcf3f4e13$var$__generator(this, function(_a) {
+                switch(_a.label){
+                    case 0:
+                        this._lastMsgRecvTime = Date.now();
+                        data = event.data;
+                        _parsePromise = new Promise(function(resolve, reject) {
+                            if (typeof data === "string") // Handle text message
+                            resolve(data);
+                            else if (data instanceof ArrayBuffer) {
+                                // Handle binary message
+                                var arrayBuffer = data;
+                                // Parse the ArrayBuffer as needed
+                                // Example: Convert ArrayBuffer to Uint8Array
+                                resolve(new Uint8Array(arrayBuffer));
+                            // Process the Uint8Array as needed
+                            } else if (data instanceof Blob) {
+                                if (!_this._parseBlobToJson) {
+                                    resolve(data);
+                                    return;
+                                }
+                                // Handle Blob message
+                                var blob = data;
+                                // Convert Blob to ArrayBuffer
+                                var reader_1 = new FileReader();
+                                reader_1.onload = function() {
+                                    var text = reader_1.result;
+                                    try {
+                                        var json = JSON.parse(text);
+                                        resolve(json);
+                                    } catch (e) {
+                                        console.error("Failed to parse JSON from Blob:", e);
+                                    }
+                                };
+                                reader_1.readAsText(blob);
+                            }
+                        });
+                        return [
+                            4 /*yield*/ ,
+                            _parsePromise
+                        ];
+                    case 1:
+                        msg = _a.sent();
+                        this.emit("message", msg);
+                        return [
+                            2 /*return*/ 
+                        ];
+                }
+            });
+        });
+    };
+    return ReconnectingWebSocket;
+}((0, $3GNns$EventEmitter));
+[
+    "binaryType",
+    "bufferedAmount",
+    "extensions",
+    "protocol",
+    "readyState",
+    "url",
+    "keepAliveTimeout",
+    "keepAliveInterval",
+    "shouldRetryFn",
+    "connectionTimeout",
+    "maxReconnectAttempts",
+    "reconnectInterval"
+].forEach(function(property) {
+    Object.defineProperty($032380dbcf3f4e13$export$4f3d0ffd941ebefb.prototype, property, {
+        enumerable: true
+    });
+});
+[
+    "CONNECTING",
+    "OPEN",
+    "CLOSING",
+    "CLOSED"
+].forEach(function(property) {
+    Object.defineProperty($032380dbcf3f4e13$export$4f3d0ffd941ebefb.prototype, property, {
+        enumerable: true,
+        value: $032380dbcf3f4e13$var$readyStates.indexOf(property)
+    });
+});
+[
+    "CONNECTING",
+    "OPEN",
+    "CLOSING",
+    "CLOSED"
+].forEach(function(property) {
+    Object.defineProperty($032380dbcf3f4e13$export$4f3d0ffd941ebefb, property, {
+        enumerable: true,
+        value: $032380dbcf3f4e13$var$readyStates.indexOf(property)
+    });
+});
 
-class $8381b73e1f76ead9$var$TrackStatusMessage {
-    constructor(receiver_index, enabled){
-        this.type = "trackStatus";
-        this.receiver_index = receiver_index;
-        this.enabled = enabled;
-    }
-}
-class $8381b73e1f76ead9$var$WebRTCTrack {
-    constructor(track){
-        this.track = track;
-        this.status = "new";
-    }
-}
-const $8381b73e1f76ead9$var$RENEGOTIATE_TYPE = "renegotiate";
-class $8381b73e1f76ead9$var$RenegotiateMessage {
-    constructor(){
-        this.type = $8381b73e1f76ead9$var$RENEGOTIATE_TYPE;
-    }
-}
-const $8381b73e1f76ead9$var$PEER_LEFT_TYPE = "peerLeft";
-class $8381b73e1f76ead9$var$PeerLeftMessageMessage {
-    constructor(){
-        this.type = $8381b73e1f76ead9$var$PEER_LEFT_TYPE;
-    }
-}
-// Interface for the structure of the signalling message
-const $8381b73e1f76ead9$var$SIGNALLING_TYPE = "signalling";
-class $8381b73e1f76ead9$var$SignallingMessageObject {
-    constructor(message){
-        this.type = $8381b73e1f76ead9$var$SIGNALLING_TYPE;
-        this.message = message;
-    }
-}
-const $8381b73e1f76ead9$var$AUDIO_TRANSCEIVER_INDEX = 0;
-const $8381b73e1f76ead9$var$VIDEO_TRANSCEIVER_INDEX = 1;
-const $8381b73e1f76ead9$var$SCREEN_VIDEO_TRANSCEIVER_INDEX = 2;
-class $8381b73e1f76ead9$export$62043589d053a879 extends (0, $7ytRB$pipecataiclientjs.Transport) {
-    constructor(opts = {}){
+
+
+class $763b38ac211abed6$export$7fb989e764be5cac extends (0, $3GNns$Transport) {
+    constructor(service_options, manager){
         super();
-        this._webrtcRequest = null;
-        // Trigger when the peer connection is finally ready or in case it has failed all the attempts to connect
-        this._connectResolved = null;
-        this._connectFailed = null;
-        this.pc = null;
-        this.dc = null;
-        this.audioCodec = null;
-        this.videoCodec = null;
-        this.pc_id = null;
-        this.reconnectionAttempts = 0;
-        this.maxReconnectionAttempts = 3;
-        this.isReconnecting = false;
-        this.keepAliveInterval = null;
-        this._iceServers = [];
-        this._incomingTracks = new Map();
-        this._canSendIceCandidates = false;
-        this._candidateQueue = [];
-        this.__flushTimeout = null;
-        this._flushDelay = 200;
-        this._iceServers = opts.iceServers ?? [];
-        this._waitForICEGathering = opts.waitForICEGathering ?? false;
-        this.audioCodec = opts.audioCodec ?? null;
-        this.videoCodec = opts.videoCodec ?? null;
-        this._webrtcRequest = this._resolveRequestInfo(opts);
-        this.mediaManager = opts.mediaManager || new (0, $1c088932741d88e6$export$c95c65abc5f47125)(false, false, async (event)=>{
-            if (!this.pc) return;
-            if (event.type == "audio") {
-                (0, $7ytRB$pipecataiclientjs.logger).info("SmallWebRTCMediaManager replacing audio track");
-                await this.getAudioTransceiver().sender.replaceTrack(event.track);
-            } else if (event.type == "video") {
-                (0, $7ytRB$pipecataiclientjs.logger).info("SmallWebRTCMediaManager replacing video track");
-                await this.getVideoTransceiver().sender.replaceTrack(event.track);
-            } else if (event.type == "screenVideo") {
-                (0, $7ytRB$pipecataiclientjs.logger).info("SmallWebRTCMediaManager replacing screen video track");
-                await this.getScreenVideoTransceiver().sender.replaceTrack(event.track);
-            } else if (event.type == "screenAudio") (0, $7ytRB$pipecataiclientjs.logger).info("SmallWebRTCMediaManager does not yet support screen audio. Track is ignored.");
-        }, (event)=>(0, $7ytRB$pipecataiclientjs.logger).debug("SmallWebRTCMediaManager Track stopped:", event));
+        this._botIsSpeaking = false;
+        this._service_options = service_options;
+        this._mediaManager = manager;
+        this._mediaManager.setUserAudioCallback(this.handleUserAudioStream.bind(this));
     }
+    // subclasses should implement this method to initialize the LLM
+    // client and call super() on this method
     initialize(options, messageHandler) {
         this._options = options;
         this._callbacks = options.callbacks ?? {};
         this._onMessage = messageHandler;
-        this.mediaManager.setClientOptions(options);
+        this._mediaManager.setClientOptions(options);
+        this.initializeLLM();
+        this.attachDeviceListeners();
+        this.attachLLMListeners();
         this.state = "disconnected";
-        (0, $7ytRB$pipecataiclientjs.logger).debug("[RTVI Transport] Initialized");
     }
     async initDevices() {
         this.state = "initializing";
-        await this.mediaManager.initialize();
+        await this._mediaManager.initialize();
         this.state = "initialized";
     }
-    setAudioCodec(audioCodec) {
-        this.audioCodec = audioCodec;
-    }
-    setVideoCodec(videoCodec) {
-        this.videoCodec = videoCodec;
-    }
-    _resolveRequestInfo(params) {
-        let requestInfo = null;
-        const _webrtcUrl = params.webrtcUrl ?? params.connectionUrl ?? null;
-        if (_webrtcUrl) {
-            const key = params.webrtcUrl ? "webrtcUrl" : "connectionUrl";
-            (0, $7ytRB$pipecataiclientjs.logger).warn(`${key} is deprecated. Use webrtcRequestParams instead.`);
-            if (params.webrtcRequestParams) (0, $7ytRB$pipecataiclientjs.logger).warn(`Both ${key} and webrtcRequestParams provided. Using webrtcRequestParams.`);
-            else if (typeof _webrtcUrl === "string") requestInfo = {
-                endpoint: _webrtcUrl
-            };
-            else (0, $7ytRB$pipecataiclientjs.logger).error(`Invalid ${key} provided in params. Ignoring.`);
-        }
-        if (params.webrtcRequestParams) {
-            if ((0, $7ytRB$pipecataiclientjs.isAPIRequest)(params.webrtcRequestParams)) // Override any previous request set in the constructor, do not try to merge
-            requestInfo = params.webrtcRequestParams;
-            else (0, $7ytRB$pipecataiclientjs.logger).error(`Invalid webrtcRequestParams provided in params. Ignoring.`);
-        }
-        return requestInfo ?? this._webrtcRequest;
-    }
-    _getStartEndpointAsString() {
-        const startEndpoint = this.startBotParams?.endpoint;
-        switch(typeof startEndpoint){
-            case "string":
-                return startEndpoint;
-            case "object":
-                if (startEndpoint instanceof URL) return startEndpoint.toString();
-                if (startEndpoint instanceof Request) return startEndpoint.url;
-        }
-        return;
-    }
-    _isValidObject(value) {
-        if (value === null || value === undefined) return false;
-        if (typeof value !== "object") throw new (0, $7ytRB$pipecataiclientjs.RTVIError)("Invalid connection parameters");
-        return true;
-    }
-    _fixConnectionOptionsParams(params, supportedKeys) {
-        const snakeToCamel = (snakeCaseString)=>{
-            return snakeCaseString.replace(/_([a-z,A-Z])/g, (_, letter)=>letter.toUpperCase());
-        };
-        let result = {};
-        let sessionId;
-        for (const [key, val] of Object.entries(params)){
-            const camelKey = snakeToCamel(key);
-            if (camelKey === "sessionId") {
-                sessionId = val;
-                continue;
-            }
-            if (!supportedKeys.includes(camelKey)) {
-                (0, $7ytRB$pipecataiclientjs.logger).warn(`Unrecognized connection parameter: ${key}. Ignored.`);
-                continue;
-            }
-            result[camelKey] = val;
-        }
-        if (sessionId && this._shouldUseStartBotFallback(result)) result.webrtcRequestParams = this._buildRequestParamsBasedOnStartBotParams(sessionId);
-        return result;
-    }
-    _shouldUseStartBotFallback(options) {
-        const hasStartEndpoint = !!this._getStartEndpointAsString();
-        const hasNoConnectionParams = !options.webrtcUrl && !options.connectionUrl && !options.webrtcRequestParams;
-        return hasStartEndpoint && hasNoConnectionParams;
-    }
-    _buildRequestParamsBasedOnStartBotParams(sessionId) {
-        const startEndpoint = this._getStartEndpointAsString();
-        const offerUrl = startEndpoint.replace("/start", `/sessions/${sessionId}/api/offer`);
-        return {
-            endpoint: offerUrl,
-            headers: this.startBotParams.headers
-        };
-    }
-    _validateConnectionParams(connectParams) {
-        if (!this._isValidObject(connectParams)) return undefined;
-        const params = connectParams;
-        const supportedKeys = [
-            "webrtcUrl",
-            "connectionUrl",
-            "webrtcRequestParams",
-            "iceConfig"
-        ];
-        const fixedParams = this._fixConnectionOptionsParams(params, supportedKeys);
-        const webrtcRequestParams = this._resolveRequestInfo(fixedParams);
-        if (webrtcRequestParams) fixedParams.webrtcRequestParams = webrtcRequestParams;
-        delete fixedParams.connectionUrl;
-        delete fixedParams.webrtcUrl;
-        if (Object.keys(fixedParams).length === 0) return undefined;
-        return fixedParams;
-    }
     async _connect(connectParams) {
-        if (this._abortController?.signal.aborted) return;
         this.state = "connecting";
-        if (connectParams?.iceConfig?.iceServers) this._iceServers = connectParams?.iceConfig?.iceServers;
-        // Note: There is no need to validate the params here, as they were already
-        //       validated and fixed in the parent class's connect() method (which calls
-        //       _validateConnectionParams() and passes the result to _connect()).
-        this._webrtcRequest = connectParams?.webrtcRequestParams ?? this._webrtcRequest;
-        if (!this._webrtcRequest) {
-            (0, $7ytRB$pipecataiclientjs.logger).error("No request details provided for WebRTC connection");
-            this.state = "error";
-            throw new (0, $7ytRB$pipecataiclientjs.TransportStartError)();
-        }
-        await this.mediaManager.connect();
-        await this.startNewPeerConnection();
-        if (this._abortController?.signal.aborted) return;
-        if (this.dc?.readyState !== "open") // Wait until we are actually connected and the data channel is ready
-        await new Promise((resolve, reject)=>{
-            this._connectResolved = resolve;
-            this._connectFailed = reject;
-        });
+        if (connectParams) this._service_options = {
+            ...this._service_options,
+            ...connectParams
+        };
+        await this.connectLLM();
+        // connect user audio to llm
+        this._mediaManager.connect();
         this.state = "connected";
         this._callbacks.onConnected?.();
     }
-    syncTrackStatus() {
-        // Sending the current status from the tracks to Pipecat
-        this.sendSignallingMessage(new $8381b73e1f76ead9$var$TrackStatusMessage($8381b73e1f76ead9$var$AUDIO_TRANSCEIVER_INDEX, this.mediaManager.isMicEnabled));
-        this.sendSignallingMessage(new $8381b73e1f76ead9$var$TrackStatusMessage($8381b73e1f76ead9$var$VIDEO_TRANSCEIVER_INDEX, this.mediaManager.isCamEnabled));
-        if (this.mediaManager.supportsScreenShare) this.sendSignallingMessage(new $8381b73e1f76ead9$var$TrackStatusMessage($8381b73e1f76ead9$var$SCREEN_VIDEO_TRANSCEIVER_INDEX, this.mediaManager.isSharingScreen && !!this.mediaManager.tracks().local.screenVideo));
-    }
-    sendReadyMessage() {
-        this.state = "ready";
-        // Sending message that the client is ready, just for testing
-        //this.dc?.send(JSON.stringify({id: 'clientReady', label: 'rtvi-ai', type:'client-ready'}))
-        this.sendMessage((0, $7ytRB$pipecataiclientjs.RTVIMessage).clientReady());
-    }
-    sendMessage(message) {
-        if (!this.dc || this.dc.readyState !== "open") {
-            (0, $7ytRB$pipecataiclientjs.logger).warn(`Datachannel is not ready. Message not sent: ${message}`);
-            return;
-        }
-        this.dc?.send(JSON.stringify(message));
-    }
-    sendSignallingMessage(message) {
-        if (!this.dc || this.dc.readyState !== "open") {
-            (0, $7ytRB$pipecataiclientjs.logger).warn(`Datachannel is not ready. Message not sent: ${message}`);
-            return;
-        }
-        const signallingMessage = new $8381b73e1f76ead9$var$SignallingMessageObject(message);
-        this.dc?.send(JSON.stringify(signallingMessage));
-    }
     async _disconnect() {
         this.state = "disconnecting";
-        await this.stop();
+        await this._mediaManager.disconnect();
+        await this.disconnectLLM();
         this.state = "disconnected";
-    }
-    createPeerConnection() {
-        const config = {
-            iceServers: this._iceServers
-        };
-        let pc = new RTCPeerConnection(config);
-        pc.onicecandidate = async (event)=>{
-            if (event.candidate) {
-                (0, $7ytRB$pipecataiclientjs.logger).debug("New ICE candidate:", event.candidate);
-                await this.sendIceCandidate(event.candidate);
-            } else (0, $7ytRB$pipecataiclientjs.logger).info("All ICE candidates have been sent.");
-        };
-        pc.addEventListener("icegatheringstatechange", ()=>{
-            if (pc.iceGatheringState === "complete" && pc.iceConnectionState === "checking" && this._waitForICEGathering) (0, $7ytRB$pipecataiclientjs.logger).info("Ice gathering completed and connection is still checking. Trying to reconnect.");
-        });
-        pc.addEventListener("iceconnectionstatechange", ()=>this.handleICEConnectionStateChange());
-        (0, $7ytRB$pipecataiclientjs.logger).debug(`iceConnectionState: ${pc.iceConnectionState}`);
-        pc.addEventListener("signalingstatechange", ()=>{
-            (0, $7ytRB$pipecataiclientjs.logger).debug(`signalingState: ${this.pc.signalingState}`);
-            if (this.pc.signalingState == "stable") this.handleReconnectionCompleted();
-        });
-        (0, $7ytRB$pipecataiclientjs.logger).debug(`signalingState: ${pc.signalingState}`);
-        pc.addEventListener("track", (evt)=>{
-            const streamType = evt.transceiver ? evt.transceiver.mid === "0" ? "microphone" : evt.transceiver.mid === "1" ? "camera" : "screenVideo" : null;
-            if (!streamType) {
-                (0, $7ytRB$pipecataiclientjs.logger).warn("Received track without transceiver mid", evt);
-                return;
-            }
-            (0, $7ytRB$pipecataiclientjs.logger).debug(`Received new remote track for ${streamType}`);
-            this._incomingTracks.set(streamType, new $8381b73e1f76ead9$var$WebRTCTrack(evt.track));
-            evt.track.addEventListener("unmute", ()=>{
-                const t = this._incomingTracks.get(streamType);
-                if (!t) return;
-                (0, $7ytRB$pipecataiclientjs.logger).debug(`Remote track unmuted: ${streamType}`);
-                t.status = "unmuted";
-                this._callbacks.onTrackStarted?.(evt.track);
-            });
-            evt.track.addEventListener("mute", ()=>{
-                const t = this._incomingTracks.get(streamType);
-                if (!t || t.status !== "unmuted") return;
-                (0, $7ytRB$pipecataiclientjs.logger).debug(`Remote track muted: ${streamType}`);
-                t.status = "muted";
-                this._callbacks.onTrackStopped?.(evt.track);
-            });
-            evt.track.addEventListener("ended", ()=>{
-                (0, $7ytRB$pipecataiclientjs.logger).debug(`Remote track ended: ${streamType}`);
-                this._callbacks.onTrackStopped?.(evt.track);
-                this._incomingTracks.delete(streamType);
-            });
-        });
-        return pc;
-    }
-    handleICEConnectionStateChange() {
-        if (!this.pc) return;
-        (0, $7ytRB$pipecataiclientjs.logger).debug(`ICE Connection State: ${this.pc.iceConnectionState}`);
-        if (this.pc.iceConnectionState === "failed") {
-            (0, $7ytRB$pipecataiclientjs.logger).debug("ICE connection failed, attempting restart.");
-            this.attemptReconnection(true);
-        } else if (this.pc.iceConnectionState === "disconnected") // Waiting before trying to reconnect to see if it handles it automatically
-        setTimeout(()=>{
-            if (this.pc?.iceConnectionState === "disconnected") {
-                (0, $7ytRB$pipecataiclientjs.logger).debug("Still disconnected, attempting reconnection.");
-                this.attemptReconnection(true);
-            }
-        }, 5000);
-    }
-    handleReconnectionCompleted() {
-        this.reconnectionAttempts = 0;
-        this.isReconnecting = false;
-    }
-    async attemptReconnection(recreatePeerConnection = false) {
-        if (this.isReconnecting) {
-            (0, $7ytRB$pipecataiclientjs.logger).debug("Reconnection already in progress, skipping.");
-            return;
-        }
-        if (this.reconnectionAttempts >= this.maxReconnectionAttempts) {
-            (0, $7ytRB$pipecataiclientjs.logger).debug("Max reconnection attempts reached. Stopping transport.");
-            await this.stop();
-            return;
-        }
-        this.isReconnecting = true;
-        this.reconnectionAttempts++;
-        (0, $7ytRB$pipecataiclientjs.logger).debug(`Reconnection attempt ${this.reconnectionAttempts}...`);
-        // aiortc does not seem to work when just trying to restart the ice
-        // so for this case we create a new peer connection on both sides
-        if (recreatePeerConnection) {
-            const oldPC = this.pc;
-            await this.startNewPeerConnection(recreatePeerConnection);
-            if (oldPC) {
-                (0, $7ytRB$pipecataiclientjs.logger).debug("closing old peer connection");
-                this.closePeerConnection(oldPC);
-            }
-        } else await this.negotiate();
-    }
-    async waitForIceGatheringComplete(timeoutMs = 2000) {
-        const pc = this.pc;
-        if (pc.iceGatheringState === "complete") return;
-        (0, $7ytRB$pipecataiclientjs.logger).info("Waiting for ICE gathering to complete. Current state:", pc.iceGatheringState);
-        return new Promise((resolve)=>{
-            let timeoutId;
-            const cleanup = ()=>{
-                pc.removeEventListener("icegatheringstatechange", checkState);
-                clearTimeout(timeoutId);
-            };
-            const checkState = ()=>{
-                (0, $7ytRB$pipecataiclientjs.logger).debug("icegatheringstatechange:", pc.iceGatheringState);
-                if (pc.iceGatheringState === "complete") {
-                    cleanup();
-                    resolve();
-                }
-            };
-            const onTimeout = ()=>{
-                (0, $7ytRB$pipecataiclientjs.logger).debug(`ICE gathering timed out after ${timeoutMs} ms.`);
-                cleanup();
-                resolve();
-            };
-            pc.addEventListener("icegatheringstatechange", checkState);
-            timeoutId = setTimeout(onTimeout, timeoutMs);
-            // Checking the state again to avoid race conditions
-            checkState();
-        });
-    }
-    async sendIceCandidate(candidate) {
-        if (!this._webrtcRequest) {
-            (0, $7ytRB$pipecataiclientjs.logger).error("No request details provided for WebRTC connection");
-            return;
-        }
-        this._candidateQueue.push(candidate);
-        // We are sending all the ice candidates each 200ms
-        if (!this.__flushTimeout) this.__flushTimeout = setTimeout(()=>this.flushIceCandidates(), this._flushDelay);
-    }
-    async flushIceCandidates() {
-        this.__flushTimeout = null;
-        if (!this._webrtcRequest || this._candidateQueue.length === 0 || !this._canSendIceCandidates) return;
-        // Drain queue
-        const candidates = this._candidateQueue.splice(0, this._candidateQueue.length);
-        try {
-            const headers = new Headers({
-                "Content-Type": "application/json",
-                ...Object.fromEntries((this._webrtcRequest.headers ?? new Headers()).entries())
-            });
-            const payload = {
-                pc_id: this.pc_id,
-                candidates: candidates.map((c)=>({
-                        candidate: c.candidate,
-                        sdp_mid: c.sdpMid,
-                        sdp_mline_index: c.sdpMLineIndex
-                    }))
-            };
-            await fetch(this._webrtcRequest.endpoint, {
-                method: "PATCH",
-                headers: headers,
-                body: JSON.stringify(payload)
-            });
-        } catch (e) {
-            (0, $7ytRB$pipecataiclientjs.logger).error(`Failed to send ICE candidate: ${e}`);
-        }
-    }
-    async negotiate(recreatePeerConnection = false) {
-        if (!this.pc) return Promise.reject("Peer connection is not initialized");
-        if (!this._webrtcRequest) {
-            (0, $7ytRB$pipecataiclientjs.logger).error("No request details provided for WebRTC connection");
-            this.state = "error";
-            throw new (0, $7ytRB$pipecataiclientjs.TransportStartError)();
-        }
-        try {
-            // Create offer
-            const offer = await this.pc.createOffer();
-            await this.pc.setLocalDescription(offer);
-            // Wait for ICE gathering to complete
-            if (this._waitForICEGathering) await this.waitForIceGatheringComplete();
-            let offerSdp = this.pc.localDescription;
-            // Filter audio codec
-            if (this.audioCodec && this.audioCodec !== "default") // @ts-ignore
-            offerSdp.sdp = this.sdpFilterCodec("audio", this.audioCodec, offerSdp.sdp);
-            // Filter video codec
-            if (this.videoCodec && this.videoCodec !== "default") // @ts-ignore
-            offerSdp.sdp = this.sdpFilterCodec("video", this.videoCodec, offerSdp.sdp);
-            (0, $7ytRB$pipecataiclientjs.logger).debug(`Will create offer for peerId: ${this.pc_id}`);
-            // Send offer to server
-            const request = (0, ($parcel$interopDefault($7ytRB$lodashcloneDeep)))(this._webrtcRequest);
-            const requestData = {
-                sdp: offerSdp.sdp,
-                type: offerSdp.type,
-                pc_id: this.pc_id,
-                restart_pc: recreatePeerConnection
-            };
-            if (this._webrtcRequest.requestData) requestData.requestData = this._webrtcRequest.requestData;
-            request.requestData = requestData;
-            const answer = await (0, $7ytRB$pipecataiclientjs.makeRequest)(request);
-            // @ts-ignore
-            this.pc_id = answer.pc_id;
-            // @ts-ignore
-            (0, $7ytRB$pipecataiclientjs.logger).debug(`Received answer for peer connection id ${answer.pc_id}`);
-            await this.pc.setRemoteDescription(answer);
-        } catch (e) {
-            (0, $7ytRB$pipecataiclientjs.logger).debug(`Reconnection attempt ${this.reconnectionAttempts} failed: ${e}`);
-            this.isReconnecting = false;
-            setTimeout(()=>this.attemptReconnection(true), 300000); // increase to account for cold-start times and other overhead
-        }
-    }
-    addInitialTransceivers() {
-        // Transceivers always appear in creation-order for both peers
-        // For now we support 3 transceivers meant to hold the following
-        // tracks in the given order:
-        // audio, video, screenVideo
-        this.pc.addTransceiver("audio", {
-            direction: "sendrecv"
-        });
-        this.pc.addTransceiver("video", {
-            direction: "sendrecv"
-        });
-        if (this.mediaManager.supportsScreenShare) // For now, we only support receiving a single video track
-        this.pc.addTransceiver("video", {
-            direction: "sendonly"
-        });
-    }
-    getAudioTransceiver() {
-        // Transceivers always appear in creation-order for both peers
-        // Look at addInitialTransceivers
-        return this.pc.getTransceivers()[$8381b73e1f76ead9$var$AUDIO_TRANSCEIVER_INDEX];
-    }
-    getVideoTransceiver() {
-        // Transceivers always appear in creation-order for both peers
-        // Look at addInitialTransceivers
-        return this.pc.getTransceivers()[$8381b73e1f76ead9$var$VIDEO_TRANSCEIVER_INDEX];
-    }
-    getScreenVideoTransceiver() {
-        // Transceivers always appear in creation-order for both peers
-        // Look at addInitialTransceivers
-        return this.pc.getTransceivers()[$8381b73e1f76ead9$var$SCREEN_VIDEO_TRANSCEIVER_INDEX];
-    }
-    async startNewPeerConnection(recreatePeerConnection = false) {
-        this.pc = this.createPeerConnection();
-        this.addInitialTransceivers();
-        this.dc = this.createDataChannel("chat", {
-            ordered: true
-        });
-        await this.addUserMedia();
-        await this.negotiate(recreatePeerConnection);
-        // Sending the ice candidates
-        this._canSendIceCandidates = true;
-        await this.flushIceCandidates();
-    }
-    async addUserMedia() {
-        (0, $7ytRB$pipecataiclientjs.logger).debug(`addUserMedia this.tracks(): ${this.tracks()}`);
-        let audioTrack = this.tracks().local.audio;
-        (0, $7ytRB$pipecataiclientjs.logger).debug(`addUserMedia audioTrack: ${audioTrack}`);
-        if (audioTrack) await this.getAudioTransceiver().sender.replaceTrack(audioTrack);
-        let videoTrack = this.tracks().local.video;
-        (0, $7ytRB$pipecataiclientjs.logger).debug(`addUserMedia videoTrack: ${videoTrack}`);
-        if (videoTrack) await this.getVideoTransceiver().sender.replaceTrack(videoTrack);
-        if (this.mediaManager.supportsScreenShare) {
-            videoTrack = this.tracks().local.screenVideo;
-            (0, $7ytRB$pipecataiclientjs.logger).debug(`addUserMedia screenVideoTrack: ${videoTrack}`);
-            if (videoTrack) await this.getScreenVideoTransceiver().sender.replaceTrack(videoTrack);
-        }
-    }
-    // Method to handle a general message (this can be expanded for other types of messages)
-    handleMessage(message) {
-        try {
-            const messageObj = JSON.parse(message); // Type is `any` initially
-            (0, $7ytRB$pipecataiclientjs.logger).debug("received message:", messageObj);
-            // Check if it's a signalling message
-            if (messageObj.type === $8381b73e1f76ead9$var$SIGNALLING_TYPE) this.handleSignallingMessage(messageObj); // Delegate to handleSignallingMessage
-            else // Bubble any messages with rtvi-ai label
-            if (messageObj.label === "rtvi-ai") this._onMessage({
-                id: messageObj.id,
-                type: messageObj.type,
-                data: messageObj.data
-            });
-        } catch (error) {
-            (0, $7ytRB$pipecataiclientjs.logger).error("Failed to parse JSON message:", error);
-        }
-    }
-    // Method to handle signalling messages specifically
-    async handleSignallingMessage(messageObj) {
-        // Cast the object to the correct type after verification
-        const signallingMessage = messageObj;
-        // Handle different signalling message types
-        switch(signallingMessage.message.type){
-            case $8381b73e1f76ead9$var$RENEGOTIATE_TYPE:
-                this.attemptReconnection(false);
-                break;
-            case $8381b73e1f76ead9$var$PEER_LEFT_TYPE:
-                this.disconnect();
-                break;
-            default:
-                (0, $7ytRB$pipecataiclientjs.logger).warn("Unknown signalling message:", signallingMessage.message);
-        }
-    }
-    createDataChannel(label, options) {
-        const dc = this.pc.createDataChannel(label, options);
-        dc.addEventListener("close", ()=>{
-            (0, $7ytRB$pipecataiclientjs.logger).debug("datachannel closed");
-            if (this.keepAliveInterval) {
-                clearInterval(this.keepAliveInterval);
-                this.keepAliveInterval = null;
-            }
-        });
-        dc.addEventListener("open", ()=>{
-            (0, $7ytRB$pipecataiclientjs.logger).debug("datachannel opened");
-            if (this._connectResolved) {
-                this.syncTrackStatus();
-                this._connectResolved();
-                this._connectResolved = null;
-                this._connectFailed = null;
-            }
-            // @ts-ignore
-            this.keepAliveInterval = setInterval(()=>{
-                const message = "ping: " + new Date().getTime();
-                dc.send(message);
-            }, 1000);
-        });
-        dc.addEventListener("message", (evt)=>{
-            let message = evt.data;
-            this.handleMessage(message);
-        });
-        return dc;
-    }
-    closePeerConnection(pc) {
-        pc.getTransceivers().forEach((transceiver)=>{
-            if (transceiver.stop) transceiver.stop();
-        });
-        pc.getSenders().forEach((sender)=>{
-            sender.track?.stop();
-        });
-        pc.close();
-    }
-    async stop() {
-        if (!this.pc) {
-            (0, $7ytRB$pipecataiclientjs.logger).debug("Peer connection is already closed or null.");
-            return;
-        }
-        if (this.dc) this.dc.close();
-        this.closePeerConnection(this.pc);
-        this.pc = null;
-        await this.mediaManager.disconnect();
-        // For some reason after we close the peer connection, it is not triggering the listeners
-        this.pc_id = null;
-        this.reconnectionAttempts = 0;
-        this.isReconnecting = false;
         this._callbacks.onDisconnected?.();
-        this._candidateQueue = [];
-        this._canSendIceCandidates = false;
-        if (this._connectFailed) this._connectFailed();
-        this._connectFailed = null;
-        this._connectResolved = null;
     }
     getAllMics() {
-        return this.mediaManager.getAllMics();
+        return this._mediaManager.getAllMics();
     }
     getAllCams() {
-        return this.mediaManager.getAllCams();
+        return this._mediaManager.getAllCams();
     }
     getAllSpeakers() {
-        return this.mediaManager.getAllSpeakers();
+        return this._mediaManager.getAllSpeakers();
     }
     async updateMic(micId) {
-        return this.mediaManager.updateMic(micId);
+        return this._mediaManager.updateMic(micId);
     }
     updateCam(camId) {
-        return this.mediaManager.updateCam(camId);
+        return this._mediaManager.updateCam(camId);
     }
     updateSpeaker(speakerId) {
-        return this.mediaManager.updateSpeaker(speakerId);
+        return this._mediaManager.updateSpeaker(speakerId);
     }
     get selectedMic() {
-        return this.mediaManager.selectedMic;
+        return this._mediaManager.selectedMic;
     }
     get selectedCam() {
-        return this.mediaManager.selectedCam;
+        return this._mediaManager.selectedCam;
     }
     get selectedSpeaker() {
-        return this.mediaManager.selectedSpeaker;
-    }
-    set iceServers(iceServers) {
-        this._iceServers = iceServers;
-    }
-    get iceServers() {
-        return this._iceServers;
+        return this._mediaManager.selectedSpeaker;
     }
     enableMic(enable) {
-        this.mediaManager.enableMic(enable);
-        this.sendSignallingMessage(new $8381b73e1f76ead9$var$TrackStatusMessage($8381b73e1f76ead9$var$AUDIO_TRANSCEIVER_INDEX, enable));
+        this._mediaManager.enableMic(enable);
     }
     enableCam(enable) {
-        this.mediaManager.enableCam(enable);
-        this.sendSignallingMessage(new $8381b73e1f76ead9$var$TrackStatusMessage($8381b73e1f76ead9$var$VIDEO_TRANSCEIVER_INDEX, enable));
-    }
-    async enableScreenShare(enable) {
-        if (!this.mediaManager.supportsScreenShare) throw new (0, $7ytRB$pipecataiclientjs.UnsupportedFeatureError)("enableScreenShare", "mediaManager", "Screen sharing is not supported by the current media manager");
-        this.mediaManager.enableScreenShare(enable);
-        this.sendSignallingMessage(new $8381b73e1f76ead9$var$TrackStatusMessage($8381b73e1f76ead9$var$SCREEN_VIDEO_TRANSCEIVER_INDEX, enable));
+        this._mediaManager.enableCam(enable);
     }
     get isCamEnabled() {
-        return this.mediaManager.isCamEnabled;
+        return this._mediaManager.isCamEnabled;
     }
     get isMicEnabled() {
-        return this.mediaManager.isMicEnabled;
-    }
-    get isSharingScreen() {
-        return this.mediaManager.isSharingScreen;
+        return this._mediaManager.isMicEnabled;
     }
     get state() {
         return this._state;
@@ -3529,48 +3723,286 @@ class $8381b73e1f76ead9$export$62043589d053a879 extends (0, $7ytRB$pipecataiclie
         this._callbacks.onTransportStateChanged?.(state);
     }
     tracks() {
-        return this.mediaManager.tracks();
+        return this._mediaManager.tracks();
     }
-    sdpFilterCodec(kind, codec, realSdp) {
-        const allowed = [];
-        const rtxRegex = new RegExp("a=fmtp:(\\d+) apt=(\\d+)\\r$");
-        const codecRegex = new RegExp("a=rtpmap:([0-9]+) " + this.escapeRegExp(codec));
-        const videoRegex = new RegExp("(m=" + kind + " .*?)( ([0-9]+))*\\s*$");
-        const lines = realSdp.split("\n");
-        let isKind = false;
-        for(let i = 0; i < lines.length; i++){
-            if (lines[i].startsWith("m=" + kind + " ")) isKind = true;
-            else if (lines[i].startsWith("m=")) isKind = false;
-            if (isKind) {
-                const match = lines[i].match(codecRegex);
-                if (match) allowed.push(parseInt(match[1]));
-                const matchRtx = lines[i].match(rtxRegex);
-                if (matchRtx && allowed.includes(parseInt(matchRtx[2]))) allowed.push(parseInt(matchRtx[1]));
+    // Realtime event handlers
+    async userStartedSpeaking() {
+        // Handle interruption
+        const trackSampleOffset = await this._mediaManager.userStartedSpeaking();
+        this._callbacks.onUserStartedSpeaking?.();
+        return trackSampleOffset;
+    }
+    userStoppedSpeaking() {
+        this._callbacks.onUserStoppedSpeaking?.();
+    }
+    userTranscript(transcript) {
+        this._callbacks.onUserTranscript?.(transcript);
+    }
+    botStartedSpeaking() {
+        if (!this._botIsSpeaking) {
+            this._botIsSpeaking = true;
+            this._callbacks.onBotStartedSpeaking?.();
+        }
+    }
+    botStoppedSpeaking() {
+        if (this._botIsSpeaking) {
+            this._botIsSpeaking = false;
+            this._callbacks.onBotStoppedSpeaking?.();
+        }
+    }
+    botTtsText(data) {
+        this._callbacks.onBotTtsText?.(data);
+    }
+    bufferBotAudio(audio, id) {
+        this._mediaManager.bufferBotAudio(audio, id);
+    }
+    connectionError(errorMsg) {
+        console.error(errorMsg);
+        this.state = "error";
+        this.disconnect();
+    }
+    attachDeviceListeners() {}
+}
+
+
+const $d4cf498bb51af8a5$var$HOST = `generativelanguage.googleapis.com`;
+const $d4cf498bb51af8a5$var$BIDI_PATH = `google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent`;
+const $d4cf498bb51af8a5$var$MODEL = "models/gemini-2.0-flash-exp";
+class $d4cf498bb51af8a5$export$bef67da0c82ecefe extends (0, $763b38ac211abed6$export$7fb989e764be5cac) {
+    constructor(service_options, manager){
+        if (!manager) manager = new (0, $22ece045290c996a$export$c95c65abc5f47125)();
+        super(service_options, manager);
+        this._ws = null;
+        this._botResponseID = 0;
+    }
+    initializeLLM() {
+        const service_options = this._service_options;
+        const apiKey = service_options.api_key;
+        if (!apiKey) {
+            console.error("!!! No API key provided in llm_service_options");
+            return;
+        }
+        const base_url = `wss://${$d4cf498bb51af8a5$var$HOST}/ws/${$d4cf498bb51af8a5$var$BIDI_PATH}`;
+        this._ws = new (0, $032380dbcf3f4e13$export$4f3d0ffd941ebefb)(`${base_url}?key=${apiKey}`);
+        // don't run the keep alive interval until we determine if there's an api for it
+        this._ws.keepAliveInterval = 0;
+    }
+    // This is called from super.initialize()
+    attachLLMListeners() {
+        if (!this._ws) {
+            console.error("attachLLMListeners called before the websocket is initialized. Be sure to call initializeLLM() first.");
+            return;
+        }
+        this._ws.on("open", ()=>{});
+        this._ws.on("message", async (msg)=>{
+            const content = msg.serverContent;
+            if (!content) {
+                if ("setupComplete" in msg) {
+                    this.state = "ready";
+                    if (this._botIsReadyResolve) {
+                        this._botIsReadyResolve();
+                        this._botIsReadyResolve = null;
+                    }
+                } else console.log("received unknown message", msg);
+                return;
             }
-        }
-        const skipRegex = "a=(fmtp|rtcp-fb|rtpmap):([0-9]+)";
-        let sdp = "";
-        isKind = false;
-        for(let i = 0; i < lines.length; i++){
-            if (lines[i].startsWith("m=" + kind + " ")) isKind = true;
-            else if (lines[i].startsWith("m=")) isKind = false;
-            if (isKind) {
-                const skipMatch = lines[i].match(skipRegex);
-                if (skipMatch && !allowed.includes(parseInt(skipMatch[2]))) continue;
-                else if (lines[i].match(videoRegex)) sdp += lines[i].replace(videoRegex, "$1 " + allowed.join(" ")) + "\n";
-                else sdp += lines[i] + "\n";
-            } else sdp += lines[i] + "\n";
-        }
-        return sdp;
+            if (content.modelTurn) {
+                let result = null;
+                content.modelTurn.parts?.forEach((part)=>{
+                    if (part.inlineData?.data) {
+                        if (result) $d4cf498bb51af8a5$var$mergeBuffers(result, $d4cf498bb51af8a5$var$base64ToArrayBuffer(part.inlineData.data));
+                        else result = $d4cf498bb51af8a5$var$base64ToArrayBuffer(part.inlineData.data);
+                    }
+                });
+                if (result) {
+                    if (!this._botIsSpeaking) {
+                        this._botResponseID++;
+                        this.botStartedSpeaking();
+                    }
+                    this.bufferBotAudio(result, this._botResponseID.toString());
+                }
+            } else if (content.interrupted) await this.userStartedSpeaking();
+            else if (content.turnComplete) this.botStoppedSpeaking();
+        });
+        this._ws.on("error", (error)=>{
+            this.connectionError(`websocket error: ${error}`);
+        });
+        this._ws.on("connection-timeout", ()=>{
+            this.connectionError("websocket connection timed out");
+        });
+        this._ws.on("close", (code)=>{
+            this.connectionError(`websocket connection closed. Code: ${code}`);
+        });
+        this._ws.on("reconnect-failed", ()=>{
+            this.connectionError(`websocket reconnect failed`);
+        });
     }
-    escapeRegExp(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    _validateConnectionParams(connectParams) {
+        if (connectParams === undefined || connectParams === null) return undefined;
+        if (typeof connectParams !== "object") throw new (0, $3GNns$RTVIError)("Invalid connection parameters");
+        return connectParams;
+    }
+    async connectLLM() {
+        if (!this._ws) {
+            console.error("connectLLM called before the websocket is initialized. Be sure to call initializeLLM() first.");
+            return;
+        }
+        try {
+            await this._ws.connect();
+        } catch (error) {
+            const msg = `Failed to connect to LLM: ${error}`;
+            console.error(msg);
+            this.state = "error";
+            throw new (0, $3GNns$TransportStartError)(msg);
+        }
+        const service_options = this._service_options;
+        const model = service_options?.model ?? $d4cf498bb51af8a5$var$MODEL;
+        const generation_config = service_options?.settings ?? {};
+        let config = {
+            setup: {
+                model: model,
+                generation_config: generation_config
+            }
+        };
+        try {
+            await this._sendMsg(config);
+        } catch (error) {
+            const msg = `Failed to send configuration to LLM: ${error}`;
+            console.error(msg);
+            this.state = "error";
+            throw new (0, $3GNns$TransportStartError)(msg);
+        }
+        // For this bare-bones prototype, let's just see if we have any initial_messages in the params
+        // we were constructed with.
+        if (service_options?.initial_messages) service_options.initial_messages.forEach((msg)=>{
+            try {
+                this._sendTextInput(msg.content, msg.role);
+            } catch (error) {
+                const msg = `Failed to send initial message to LLM`;
+                console.error(msg);
+                this.state = "error";
+                throw new (0, $3GNns$TransportStartError)(msg);
+            }
+        });
+    }
+    async disconnectLLM() {
+        await this._ws?.close();
+    }
+    async sendReadyMessage() {
+        const p = new Promise((resolve)=>{
+            if (this.state === "ready") resolve();
+            else this._botIsReadyResolve = resolve;
+        });
+        await p;
+        this._onMessage({
+            type: (0, $3GNns$RTVIMessageType).BOT_READY,
+            data: {
+                version: "1.0.0"
+            }
+        });
+    }
+    handleUserAudioStream(data) {
+        if (this.state === "ready") try {
+            this._sendAudioInput(data);
+        } catch (error) {
+            console.error("Error adding audio to stream player", error);
+            this.state = "error";
+        // todo: should check this error more carefully, implement disconnect, implement
+        // ping/ack connection monitoring and reconnection logic, etc.
+        }
+    }
+    sendMessage(message) {
+        if (message.type === (0, $3GNns$RTVIMessageType).APPEND_TO_CONTEXT) {
+            const data = message.data;
+            try {
+                if (typeof data.content !== "string") throw new Error("GeminiLive requires context content to be a string");
+                this._sendTextInput(data.content, data.role, data.run_immediately);
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
+        } else throw new (0, $3GNns$UnsupportedFeatureError)(message.type, `GeminiLiveWebSocketTransport`);
+    }
+    async _sendAudioInput(data) {
+        // TODO: pull this number from the media manager
+        const sampleRate = 24000;
+        const msg = {
+            realtimeInput: {
+                mediaChunks: [
+                    {
+                        mimeType: `audio/pcm;rate=${sampleRate}`,
+                        data: $d4cf498bb51af8a5$var$arrayBufferToBase64(data)
+                    }
+                ]
+            }
+        };
+        try {
+            await this._sendMsg(msg);
+        } catch (error) {
+            console.log("Error sending audio input", error);
+        }
+    }
+    async _sendTextInput(text, role, turnComplete) {
+        const msg = {
+            clientContent: {
+                turns: [
+                    {
+                        role: role,
+                        parts: [
+                            {
+                                text: text
+                            }
+                        ]
+                    }
+                ],
+                turnComplete: turnComplete !== undefined ? turnComplete : role === "user" ? true : false
+            }
+        };
+        try {
+            await this._sendMsg(msg);
+        } catch (error) {
+            console.log("Error sending text input", error);
+            throw error;
+        }
+    }
+    async _sendMsg(msg) {
+        if (!this._ws) throw new Error("sendMsg called but WS is null");
+        if (this._ws.readyState !== WebSocket.OPEN) throw new Error("attempt to send to closed socket");
+        if (!msg) throw new Error("need a msg to send a msg");
+        await this._ws.send(JSON.stringify(msg));
+    }
+    // Not implemented
+    enableScreenShare(enable) {
+        (0, $3GNns$logger).error("startScreenShare not implemented for GeminiLiveWebsocketTransport");
+        throw new (0, $3GNns$UnsupportedFeatureError)("Screen sharing", "GeminiLiveWebsocketTransport", "This feature has not been implemented");
+    }
+    get isSharingScreen() {
+        (0, $3GNns$logger).error("isSharingScreen not implemented for GeminiLiveWebsocketTransport");
+        return false;
     }
 }
-$8381b73e1f76ead9$export$62043589d053a879.SERVICE_NAME = "small-webrtc-transport";
+function $d4cf498bb51af8a5$var$base64ToArrayBuffer(base64) {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for(let i = 0; i < len; i++)bytes[i] = binaryString.charCodeAt(i);
+    return bytes.buffer;
+}
+function $d4cf498bb51af8a5$var$arrayBufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    for(let i = 0; i < bytes.byteLength; i++)binary += String.fromCharCode(bytes[i]);
+    return btoa(binary);
+}
+function $d4cf498bb51af8a5$var$mergeBuffers(leftBuffer, rightBuffer) {
+    const tmpArray = new Uint8Array(leftBuffer.byteLength + rightBuffer.byteLength);
+    tmpArray.set(new Uint8Array(leftBuffer), 0);
+    tmpArray.set(new Uint8Array(rightBuffer), leftBuffer.byteLength);
+    return tmpArray.buffer;
+}
 
 
-$parcel$exportWildcard(module.exports, $8381b73e1f76ead9$exports);
 
 
-//# sourceMappingURL=index.js.map
+export {$d4cf498bb51af8a5$export$bef67da0c82ecefe as GeminiLiveWebsocketTransport};
+//# sourceMappingURL=index.module.js.map

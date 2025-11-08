@@ -3290,7 +3290,7 @@ class $b31644dc78dca54a$export$62043589d053a879 extends (0, $99wTV$Transport) {
         } catch (e) {
             (0, $99wTV$logger).debug(`Reconnection attempt ${this.reconnectionAttempts} failed: ${e}`);
             this.isReconnecting = false;
-            setTimeout(()=>this.attemptReconnection(true), 2000);
+            setTimeout(()=>this.attemptReconnection(true), 300000); // increase to account for cold-start times and other overhead
         }
     }
     addInitialTransceivers() {

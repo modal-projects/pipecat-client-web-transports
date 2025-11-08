@@ -736,7 +736,7 @@ export class SmallWebRTCTransport extends Transport {
         `Reconnection attempt ${this.reconnectionAttempts} failed: ${e}`,
       );
       this.isReconnecting = false;
-      setTimeout(() => this.attemptReconnection(true), 2000);
+      setTimeout(() => this.attemptReconnection(true), 1000 * 60 * 5); // increase to account for cold-start times and other overhead
     }
   }
 
