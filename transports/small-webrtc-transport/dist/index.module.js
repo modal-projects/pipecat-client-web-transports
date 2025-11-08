@@ -3156,7 +3156,8 @@ class $b31644dc78dca54a$export$62043589d053a879 extends (0, $99wTV$Transport) {
                 (0, $99wTV$logger).debug("Still disconnected, attempting reconnection.");
                 this.attemptReconnection(true);
             }
-        }, 5000);
+        }, 300000);
+         // increase to account for cold-start times and other overhead
     }
     handleReconnectionCompleted() {
         this.reconnectionAttempts = 0;

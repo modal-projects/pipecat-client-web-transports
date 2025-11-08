@@ -531,8 +531,8 @@ export class SmallWebRTCTransport extends Transport {
           logger.debug("Still disconnected, attempting reconnection.");
           void this.attemptReconnection(true);
         }
-      }, 5000);
-    }
+      }, 1000 * 60 * 5);
+    } // increase to account for cold-start times and other overhead
   }
 
   private handleReconnectionCompleted() {

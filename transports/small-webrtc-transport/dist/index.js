@@ -3180,7 +3180,8 @@ class $8381b73e1f76ead9$export$62043589d053a879 extends (0, $7ytRB$pipecataiclie
                 (0, $7ytRB$pipecataiclientjs.logger).debug("Still disconnected, attempting reconnection.");
                 this.attemptReconnection(true);
             }
-        }, 5000);
+        }, 300000);
+         // increase to account for cold-start times and other overhead
     }
     handleReconnectionCompleted() {
         this.reconnectionAttempts = 0;
